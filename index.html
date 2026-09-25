@@ -11,7 +11,6 @@
           --blue:#1e5fbf;
           --blue-light:#4a8fe7;
           --blue-dark:#0d3a7a;
-          --blue-glow:#2a7fff;
           --black:#05080f;
           --black-2:#0a111f;
           --black-3:#101a2e;
@@ -37,7 +36,6 @@
         .logo{display:flex;align-items:center;gap:12px;cursor:pointer;}
         .logo-img{width:48px;height:48px;object-fit:contain;border-radius:50%;border:2px solid var(--blue);padding:2px;background:var(--black-2);display:none;transition:.3s;box-shadow:0 0 20px rgba(42,127,255,.4);}
         .logo-img.show{display:block;}
-        .logo-img:hover{transform:scale(1.08);}
         .logo-text{font-size:1.6rem;font-weight:900;letter-spacing:2px;background:linear-gradient(135deg,var(--blue-light),var(--blue),var(--blue-dark));-webkit-background-clip:text;background-clip:text;color:transparent;}
         .logo-text span{color:#fff;-webkit-text-fill-color:#fff;}
         .nav-links{display:flex;gap:24px;font-weight:600;color:#8fa3c4;font-size:.95rem;}
@@ -46,6 +44,10 @@
         .icon-btn{background:var(--black-3);border:1px solid var(--border);color:var(--blue-light);cursor:pointer;padding:8px 14px;border-radius:50px;font-weight:700;font-size:.85rem;transition:.25s;position:relative;}
         .icon-btn:hover{background:var(--blue);color:#fff;border-color:var(--blue);}
         .badge{position:absolute;top:-6px;right:-6px;background:var(--danger);color:#fff;font-size:.65rem;padding:2px 6px;border-radius:50px;font-weight:800;}
+
+        .marquee{background:linear-gradient(90deg,var(--blue-dark),var(--blue),var(--blue-dark));color:#fff;padding:10px 0;overflow:hidden;white-space:nowrap;font-weight:700;font-size:.9rem;}
+        .marquee span{display:inline-block;padding-left:100%;animation:marquee 20s linear infinite;}
+        @keyframes marquee{0%{transform:translateX(0);}100%{transform:translateX(-100%);}}
 
         .hero{text-align:center;padding:80px 20px 70px;position:relative;overflow:hidden;}
         .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center, rgba(42,127,255,.15) 0%, transparent 60%);pointer-events:none;}
@@ -58,51 +60,101 @@
         .hero button:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(42,127,255,.6);}
         .blue-line{height:2px;width:80px;background:linear-gradient(90deg,transparent,var(--blue),transparent);margin:20px auto;}
 
-        /* شريط الإعلانات */
-        .marquee{background:linear-gradient(90deg,var(--blue-dark),var(--blue),var(--blue-dark));color:#fff;padding:10px 0;overflow:hidden;white-space:nowrap;font-weight:700;font-size:.9rem;}
-        .marquee span{display:inline-block;padding-left:100%;animation:marquee 20s linear infinite;}
-        @keyframes marquee{0%{transform:translateX(0);}100%{transform:translateX(-100%);}}
-
         .section{max-width:1250px;margin:auto;padding:60px 22px;}
         .section-title{font-size:2rem;font-weight:900;margin-bottom:10px;text-align:center;background:linear-gradient(135deg,#fff,var(--blue-light));-webkit-background-clip:text;background-clip:text;color:transparent;}
         .section-sub{text-align:center;color:var(--gray);margin-bottom:44px;}
 
-        /* فلاتر الفئات */
-        .filters{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:30px;}
-        .filter-btn{background:var(--black-3);border:1px solid var(--border);color:var(--blue-light);padding:9px 20px;border-radius:50px;font-weight:700;cursor:pointer;font-size:.9rem;transition:.25s;}
-        .filter-btn:hover{border-color:var(--blue);}
-        .filter-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
-
-        /* البحث */
         .search-box{max-width:500px;margin:0 auto 30px;position:relative;}
         .search-box input{width:100%;padding:14px 48px 14px 20px;background:var(--black-2);color:#eef3fb;border:1px solid var(--border);border-radius:50px;font-size:1rem;outline:none;}
         .search-box input:focus{border-color:var(--blue);}
         .search-box::before{content:'🔍';position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:1.1rem;}
 
+        .filters{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:30px;}
+        .filter-btn{background:var(--black-3);border:1px solid var(--border);color:var(--blue-light);padding:9px 20px;border-radius:50px;font-weight:700;cursor:pointer;font-size:.9rem;transition:.25s;}
+        .filter-btn:hover{border-color:var(--blue);}
+        .filter-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+
+        /* ============ Product Cards ============ */
         .products{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:26px;}
         .card{background:linear-gradient(160deg,var(--black-2),var(--black-3));border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:.35s;display:flex;flex-direction:column;position:relative;}
-        .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--blue-light),transparent);opacity:0;transition:.35s;}
+        .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--blue-light),transparent);opacity:0;transition:.35s;z-index:5;}
         .card:hover{transform:translateY(-8px);border-color:var(--blue);box-shadow:0 20px 50px rgba(42,127,255,.15);}
         .card:hover::before{opacity:1;}
-        .card-img{height:230px;background:var(--black);display:grid;place-items:center;font-size:4rem;overflow:hidden;position:relative;}
-        .card-img img{width:100%;height:100%;object-fit:cover;transition:.5s;}
-        .card:hover .card-img img{transform:scale(1.08);}
+        
+        /* ✅ الصورة كاملة بدون قص */
+        .card-img{
+          width:100%;aspect-ratio:1/1;background:var(--black);
+          display:flex;align-items:center;justify-content:center;
+          overflow:hidden;position:relative;cursor:pointer;
+          padding:8px;
+        }
+        .card-img img{
+          width:100%;height:100%;object-fit:contain;
+          transition:.5s;border-radius:8px;
+        }
+        .card:hover .card-img img{transform:scale(1.05);}
+        
         .card-body{padding:18px;display:flex;flex-direction:column;gap:10px;flex:1;}
-        .card-title{font-weight:700;font-size:1.1rem;color:#eef3fb;}
         .card-category{font-size:.75rem;color:var(--gray);}
+        .card-title{font-weight:700;font-size:1.1rem;color:#eef3fb;}
         .price-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
         .card-price{font-weight:900;font-size:1.35rem;background:linear-gradient(135deg,var(--blue-light),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent;}
         .card-price small{color:var(--gray);font-weight:500;font-size:.8rem;-webkit-text-fill-color:var(--gray);}
         .old-price{color:var(--gray);text-decoration:line-through;font-size:.9rem;}
-        .discount-tag{position:absolute;top:10px;left:10px;background:var(--danger);color:#fff;padding:4px 10px;border-radius:8px;font-weight:800;font-size:.75rem;z-index:2;}
-        .featured-tag{position:absolute;top:10px;right:10px;background:linear-gradient(135deg,var(--warning),#e67e22);color:#fff;padding:4px 10px;border-radius:8px;font-weight:800;font-size:.75rem;z-index:2;}
+        .discount-tag{position:absolute;top:10px;left:10px;background:var(--danger);color:#fff;padding:4px 10px;border-radius:8px;font-weight:800;font-size:.75rem;z-index:6;}
+        .featured-tag{position:absolute;top:10px;right:10px;background:linear-gradient(135deg,var(--warning),#e67e22);color:#fff;padding:4px 10px;border-radius:8px;font-weight:800;font-size:.75rem;z-index:6;}
+        .images-count{position:absolute;bottom:14px;right:14px;background:rgba(0,0,0,.8);color:#fff;padding:4px 10px;border-radius:50px;font-size:.75rem;font-weight:700;z-index:6;backdrop-filter:blur(4px);}
         .stock-warning{font-size:.75rem;color:var(--warning);font-weight:700;}
-        .out-of-stock{position:absolute;inset:0;background:rgba(0,0,0,.75);display:grid;place-items:center;color:var(--danger);font-weight:900;font-size:1.2rem;z-index:3;}
+        .out-of-stock{position:absolute;inset:0;background:rgba(0,0,0,.75);display:grid;place-items:center;color:var(--danger);font-weight:900;font-size:1.2rem;z-index:4;}
         .rating{font-size:.85rem;color:#f39c12;font-weight:700;}
-        .add-btn{margin-top:auto;background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;border:none;padding:13px;border-radius:10px;font-weight:800;cursor:pointer;transition:.25s;font-size:.95rem;letter-spacing:.5px;}
+        .add-btn{margin-top:auto;background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;border:none;padding:13px;border-radius:10px;font-weight:800;cursor:pointer;transition:.25s;font-size:.95rem;}
         .add-btn:hover{background:linear-gradient(135deg,var(--blue-light),var(--blue));box-shadow:0 8px 24px rgba(42,127,255,.4);}
         .add-btn:disabled{opacity:.5;cursor:not-allowed;background:var(--gray);}
         .loading{text-align:center;padding:60px;color:var(--gray);grid-column:1/-1;font-size:1.1rem;}
+
+        /* ============ Gallery ============ */
+        .gallery-overlay{
+          position:fixed;inset:0;background:rgba(0,0,0,.95);
+          display:none;z-index:500;padding:20px;
+          align-items:center;justify-content:center;flex-direction:column;
+        }
+        .gallery-overlay.open{display:flex;}
+        .gallery-main{
+          max-width:90%;max-height:65vh;object-fit:contain;
+          border-radius:12px;border:2px solid var(--blue);
+          box-shadow:0 0 60px rgba(42,127,255,.4);
+        }
+        .gallery-thumbs{
+          display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;
+          justify-content:center;max-width:90%;
+        }
+        .gallery-thumb{
+          width:70px;height:70px;object-fit:cover;
+          border-radius:8px;border:2px solid var(--border);
+          cursor:pointer;transition:.25s;opacity:.6;
+        }
+        .gallery-thumb:hover,.gallery-thumb.active{
+          border-color:var(--blue);opacity:1;transform:scale(1.05);
+        }
+        .gallery-close{
+          position:absolute;top:20px;right:20px;
+          background:var(--danger);color:#fff;border:none;
+          width:44px;height:44px;border-radius:50%;
+          font-size:1.3rem;cursor:pointer;font-weight:900;
+          transition:.25s;z-index:501;
+        }
+        .gallery-close:hover{background:#c0392b;transform:rotate(90deg);}
+        .gallery-nav{
+          position:absolute;top:50%;transform:translateY(-50%);
+          background:rgba(42,127,255,.8);color:#fff;border:none;
+          width:50px;height:50px;border-radius:50%;
+          font-size:1.5rem;cursor:pointer;font-weight:900;
+          transition:.25s;z-index:501;
+        }
+        .gallery-nav:hover{background:var(--blue-light);}
+        .gallery-prev{left:20px;}
+        .gallery-next{right:20px;}
+        .gallery-info{color:#fff;text-align:center;margin-top:16px;font-weight:700;}
 
         .overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;z-index:200;backdrop-filter:blur(4px);}
         .overlay.open{display:block;}
@@ -114,7 +166,7 @@
         .panel::-webkit-scrollbar-thumb{background:var(--blue-dark);border-radius:4px;}
 
         .field{margin-bottom:16px;}
-        .field label{display:block;font-size:.85rem;font-weight:700;margin-bottom:7px;color:var(--blue-light);letter-spacing:.3px;}
+        .field label{display:block;font-size:.85rem;font-weight:700;margin-bottom:7px;color:var(--blue-light);}
         .field input,.field select,.field textarea{width:100%;padding:13px 15px;background:var(--black);color:#eef3fb;border:1px solid var(--border);border-radius:10px;font-size:.95rem;outline:none;font-family:inherit;transition:.25s;}
         .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(42,127,255,.15);}
         .field input::placeholder,.field textarea::placeholder{color:#4a5a75;}
@@ -131,7 +183,7 @@
         .coupon-box button{background:var(--blue);color:#fff;border:none;padding:11px 20px;border-radius:10px;font-weight:700;cursor:pointer;font-size:.9rem;transition:.25s;}
         .coupon-box button:hover{background:var(--blue-light);}
 
-        .submit-btn{width:100%;background:linear-gradient(135deg,var(--blue-light),var(--blue),var(--blue-dark));color:#fff;border:none;padding:15px;border-radius:12px;font-weight:900;cursor:pointer;font-size:1rem;letter-spacing:.5px;transition:.25s;}
+        .submit-btn{width:100%;background:linear-gradient(135deg,var(--blue-light),var(--blue),var(--blue-dark));color:#fff;border:none;padding:15px;border-radius:12px;font-weight:900;cursor:pointer;font-size:1rem;transition:.25s;}
         .submit-btn:hover{box-shadow:0 8px 28px rgba(42,127,255,.5);transform:translateY(-2px);}
         .submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
 
@@ -187,6 +239,12 @@
         .image-preview{width:100%;height:180px;object-fit:cover;border-radius:10px;margin-top:12px;display:none;}
         .image-preview.show{display:block;}
 
+        .images-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-top:12px;}
+        .image-preview-item{position:relative;border-radius:8px;overflow:hidden;}
+        .image-preview-item img{width:100%;height:80px;object-fit:cover;border:2px solid var(--blue);border-radius:8px;}
+        .image-preview-item .remove-img{position:absolute;top:4px;right:4px;background:var(--danger);color:#fff;border:none;width:22px;height:22px;border-radius:50%;cursor:pointer;font-weight:900;font-size:.7rem;}
+        .image-preview-item .main-badge{position:absolute;top:4px;left:4px;background:var(--blue);color:#fff;padding:2px 6px;border-radius:50px;font-size:.65rem;font-weight:700;}
+
         .logo-picker-preview{width:120px;height:120px;object-fit:contain;border-radius:50%;background:var(--black);border:2px solid var(--blue);padding:8px;margin:14px auto;display:none;}
         .logo-picker-preview.show{display:block;}
 
@@ -195,7 +253,7 @@
         .stat-card .num{font-size:1.8rem;font-weight:900;color:var(--blue-light);}
         .stat-card .lbl{font-size:.8rem;color:var(--gray);margin-top:4px;}
 
-        .toast{position:fixed;bottom:28px;left:50%;transform:translate(-50%,150%);background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;padding:14px 26px;border-radius:50px;font-weight:800;z-index:400;transition:.4s;box-shadow:0 12px 40px rgba(42,127,255,.5);max-width:90%;text-align:center;}
+        .toast{position:fixed;bottom:28px;left:50%;transform:translate(-50%,150%);background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;padding:14px 26px;border-radius:50px;font-weight:800;z-index:600;transition:.4s;box-shadow:0 12px 40px rgba(42,127,255,.5);max-width:90%;text-align:center;}
         .toast.show{transform:translate(-50%,0);}
         .toast.success{background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;}
         .toast.error{background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;}
@@ -214,12 +272,12 @@
           .admin-product{flex-wrap:wrap;}
           .logo-img{width:40px;height:40px;}
           .logo-text{font-size:1.3rem;}
+          .gallery-nav{width:40px;height:40px;font-size:1.2rem;}
         }
     </style>
 </head>
 <body>
 
-<!-- شريط الإعلانات -->
 <div class="marquee">
   <span>🚚 توصيل لجميع الولايات • 💵 الدفع عند الاستلام • 🎁 خصم 10% بكود WELCOME10 • ⭐ منتجات أصلية مضمونة</span>
 </div>
@@ -281,11 +339,11 @@
         <h2 class="section-title" data-i18n="contact_title"></h2>
         <div class="blue-line"></div>
         <p class="section-sub">
-    📞 <strong style="color:var(--blue-light);">0549 99 58 97</strong><br>
-    📧 <strong style="color:var(--blue-light);">rahimmoussouni77@gmail.com</strong><br>
-    📸 <a href="https://instagram.com/rahim._ms18" target="_blank" style="color:var(--blue-light);font-weight:700;">@rahim._ms18</a><br>
-    📍 <span data-i18n="contact_location"></span>
-</p>
+            📞 <strong style="color:var(--blue-light);">0549 99 58 97</strong><br>
+            📧 <strong style="color:var(--blue-light);">rahimmoussouni77@gmail.com</strong><br>
+            📸 <a href="https://instagram.com/rahim._ms18" target="_blank" style="color:var(--blue-light);font-weight:700;">@rahim._ms18</a><br>
+            📍 <span data-i18n="contact_location"></span>
+        </p>
     </section>
 </div>
 
@@ -309,6 +367,16 @@
 </footer>
 
 <div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+<!-- Product Gallery -->
+<div class="gallery-overlay" id="galleryOverlay" onclick="if(event.target.id==='galleryOverlay') closeGallery()">
+  <button class="gallery-close" onclick="closeGallery()">✕</button>
+  <button class="gallery-nav gallery-prev" onclick="galleryPrev()">‹</button>
+  <img id="galleryMainImage" class="gallery-main" src="" alt="">
+  <button class="gallery-nav gallery-next" onclick="galleryNext()">›</button>
+  <div class="gallery-thumbs" id="galleryThumbs"></div>
+  <div class="gallery-info" id="galleryInfo"></div>
+</div>
 
 <!-- Order Form -->
 <div class="panel" id="orderPanel">
@@ -377,7 +445,6 @@
         <div class="admin-tab" onclick="switchAdminTab('settings', this)" data-i18n="admin_tab_settings"></div>
     </div>
 
-    <!-- Stats Tab -->
     <div class="admin-tab-content active" id="tab-stats">
         <div class="stats-grid">
             <div class="stat-card"><div class="num" id="statProducts">0</div><div class="lbl">المنتجات</div></div>
@@ -387,7 +454,6 @@
         </div>
     </div>
 
-    <!-- Products Tab -->
     <div class="admin-tab-content" id="tab-products">
         <button class="btn-add" onclick="showProductForm()" data-i18n="admin_add_product"></button>
         <div id="adminProductForm" style="display:none;background:rgba(42,127,255,.05);padding:16px;border-radius:12px;margin-bottom:16px;border:1px solid var(--border);">
@@ -402,10 +468,10 @@
                 <label data-i18n="f_image"></label>
                 <label class="image-picker" for="pImageInput">
                     <div style="font-size:2rem;">📷</div>
-                    <p style="color:var(--blue-light);margin-top:6px;" data-i18n="tap_to_upload"></p>
-                    <input type="file" id="pImageInput" accept="image/*" onchange="previewImage(event)">
+                    <p style="color:var(--blue-light);margin-top:6px;">اضغط لاختيار صورة أو أكثر (يمكنك اختيار عدة صور)</p>
+                    <input type="file" id="pImageInput" accept="image/*" multiple onchange="previewImages(event)">
                 </label>
-                <img id="pImagePreview" class="image-preview" alt="preview">
+                <div class="images-grid" id="pImagesPreviews"></div>
             </div>
             <button class="submit-btn" onclick="saveProduct()" id="pSaveBtn" data-i18n="admin_save"></button>
             <button class="btn-del" onclick="hideProductForm()" style="width:100%;margin-top:8px;padding:11px;border-radius:10px;" data-i18n="admin_cancel"></button>
@@ -413,12 +479,10 @@
         <div id="adminProductsList"></div>
     </div>
 
-    <!-- Orders Tab -->
     <div class="admin-tab-content" id="tab-orders">
         <div id="adminOrdersList"></div>
     </div>
 
-    <!-- Coupons Tab -->
     <div class="admin-tab-content" id="tab-coupons">
         <div style="background:rgba(42,127,255,.05);padding:16px;border-radius:12px;margin-bottom:16px;border:1px solid var(--border);">
             <div class="field"><label>كود الكوبون</label><input type="text" id="cpCode" placeholder="مثال: SALE30"></div>
@@ -430,7 +494,6 @@
         <div id="adminCouponsList"></div>
     </div>
 
-    <!-- Settings Tab -->
     <div class="admin-tab-content" id="tab-settings">
         <div class="field">
             <label data-i18n="f_logo"></label>
@@ -470,9 +533,9 @@
         track_title:"تتبع طلبك",track_sub:"أدخل رقم الطلب لمعرفة حالته",track_placeholder:"RS-123456",track_btn:"🔍 ابحث",
         footer_rights:"جميع الحقوق محفوظة",footer_made:"صُنع بحب في الجزائر 🇩🇿",
         order_title:"أكمل طلبك",f_name:"الاسم الكامل *",f_phone:"رقم الهاتف *",f_wilaya:"الولاية *",f_wilaya_choose:"اختر الولاية",
-        f_commune:"البلدية *",f_commune_choose:"اختر البلدية",f_address:"العنوان الكامل *",f_qty:"الكمية *",f_image:"صورة المنتج",
+        f_commune:"البلدية *",f_commune_choose:"اختر البلدية",f_address:"العنوان الكامل *",f_qty:"الكمية *",f_image:"صور المنتج",
         f_logo:"لوغو المتجر",
-        tap_to_upload:"اضغط لاختيار صورة من هاتفك",
+        tap_to_upload:"اضغط لاختيار صورة",
         tap_to_upload_logo:"اضغط لاختيار اللوغو من هاتفك",
         cod_only:"💵 الدفع عند الاستلام فقط",
         submit_order:"✅ تأكيد الطلب",
@@ -503,7 +566,7 @@
         track_title:"Suivre ma commande",track_sub:"Entrez votre numéro de commande",track_placeholder:"RS-123456",track_btn:"🔍 Rechercher",
         footer_rights:"Tous droits réservés",footer_made:"Fait avec amour en Algérie 🇩🇿",
         order_title:"Finalisez votre commande",f_name:"Nom complet *",f_phone:"Téléphone *",f_wilaya:"Wilaya *",f_wilaya_choose:"Choisir wilaya",
-        f_commune:"Commune *",f_commune_choose:"Choisir commune",f_address:"Adresse *",f_qty:"Quantité *",f_image:"Photo du produit",
+        f_commune:"Commune *",f_commune_choose:"Choisir commune",f_address:"Adresse *",f_qty:"Quantité *",f_image:"Photos du produit",
         f_logo:"Logo de la boutique",
         tap_to_upload:"Appuyez pour choisir une photo",
         tap_to_upload_logo:"Appuyez pour choisir le logo",
@@ -635,12 +698,15 @@
     let currentProduct = null;
     let editingProductId = null;
     let uploadedImageUrl = null;
+    let pendingImages = [];
     let currentLogoUrl = null;
     let pendingLogoFile = null;
     let appliedCoupon = null;
     let currentCategory = "all";
     let searchQuery = "";
     let wishlist = JSON.parse(localStorage.getItem("rahim_wishlist") || "[]");
+    let galleryImages = [];
+    let galleryIndex = 0;
 
     /* ================= اللوغو ================= */
     async function loadLogo(){
@@ -733,6 +799,7 @@
       renderProducts();
     }
 
+    /* ================= عرض المنتجات (معدّل) ================= */
     function renderProducts(){
       const grid = document.getElementById("productsGrid");
       if(!grid) return;
@@ -743,7 +810,6 @@
         return matchCat && matchSearch;
       });
 
-      // المنتجات المميزة أولاً
       filtered.sort((a,b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
 
       if(!filtered.length){
@@ -752,7 +818,22 @@
       }
 
       grid.innerHTML = filtered.map(p => {
-        const img = p.image_url ? `<img src="${p.image_url}" alt="${p.name}">` : (p.emoji || "📦");
+        // جمع كل الصور
+        const allImages = [];
+        if(p.image_url) allImages.push(p.image_url);
+        if(p.image_urls && Array.isArray(p.image_urls)){
+          p.image_urls.forEach(url => { if(url && !allImages.includes(url)) allImages.push(url); });
+        }
+        
+        // ✅ الصورة كاملة بدون قص
+        const mainImg = allImages.length > 0 
+          ? `<img src="${allImages[0]}" alt="${p.name}" loading="lazy">` 
+          : `<div style="font-size:4rem;">${p.emoji || "📦"}</div>`;
+        
+        const imagesBadge = allImages.length > 1 
+          ? `<div class="images-count">📷 ${allImages.length}</div>` 
+          : '';
+        
         const hasDiscount = p.old_price && p.old_price > p.price;
         const discountPercent = hasDiscount ? Math.round((1 - p.price/p.old_price) * 100) : 0;
         const outOfStock = p.stock !== null && p.stock <= 0;
@@ -762,8 +843,9 @@
         <div class="card">
           ${hasDiscount ? `<div class="discount-tag">-${discountPercent}%</div>` : ''}
           ${p.featured ? `<div class="featured-tag">⭐ مميز</div>` : ''}
-          <div class="card-img">
-            ${img}
+          <div class="card-img" onclick="openProductGallery(${p.id})">
+            ${mainImg}
+            ${imagesBadge}
             ${outOfStock ? `<div class="out-of-stock">${t("out_of_stock")}</div>` : ''}
           </div>
           <div class="card-body">
@@ -786,6 +868,50 @@
       }).join("");
     }
 
+    /* ================= معرض الصور ================= */
+    function openProductGallery(productId){
+      const p = PRODUCTS.find(x => x.id === productId);
+      if(!p) return;
+      
+      galleryImages = [];
+      if(p.image_url) galleryImages.push(p.image_url);
+      if(p.image_urls && Array.isArray(p.image_urls)){
+        p.image_urls.forEach(url => { if(url && !galleryImages.includes(url)) galleryImages.push(url); });
+      }
+      
+      if(!galleryImages.length) return;
+      
+      galleryIndex = 0;
+      updateGallery(p.name);
+      document.getElementById("galleryOverlay").classList.add("open");
+    }
+
+    function updateGallery(productName){
+      document.getElementById("galleryMainImage").src = galleryImages[galleryIndex];
+      const thumbs = document.getElementById("galleryThumbs");
+      if(galleryImages.length > 1){
+        thumbs.innerHTML = galleryImages.map((url, i) => 
+          `<img src="${url}" class="gallery-thumb ${i === galleryIndex ? 'active' : ''}" onclick="galleryGoTo(${i})">`
+        ).join("");
+      } else {
+        thumbs.innerHTML = '';
+      }
+      document.getElementById("galleryInfo").textContent = `${galleryIndex + 1} / ${galleryImages.length}`;
+    }
+
+    function galleryGoTo(i){ galleryIndex = i; updateGallery(); }
+    function galleryPrev(){ galleryIndex = (galleryIndex - 1 + galleryImages.length) % galleryImages.length; updateGallery(); }
+    function galleryNext(){ galleryIndex = (galleryIndex + 1) % galleryImages.length; updateGallery(); }
+    function closeGallery(){ document.getElementById("galleryOverlay").classList.remove("open"); }
+
+    document.addEventListener("keydown", (e) => {
+      const overlay = document.getElementById("galleryOverlay");
+      if(!overlay.classList.contains("open")) return;
+      if(e.key === "ArrowRight") galleryNext();
+      if(e.key === "ArrowLeft") galleryPrev();
+      if(e.key === "Escape") closeGallery();
+    });
+
     /* ================= المفضلة ================= */
     function toggleWishlist(id){
       const idx = wishlist.indexOf(id);
@@ -798,10 +924,8 @@
     }
     function updateWishlistBadge(){
       const badge = document.getElementById("wishlistBadge");
-      if(wishlist.length > 0){
-        badge.textContent = wishlist.length;
-        badge.style.display = "block";
-      } else badge.style.display = "none";
+      if(wishlist.length > 0){ badge.textContent = wishlist.length; badge.style.display = "block"; }
+      else badge.style.display = "none";
     }
     function openWishlist(){
       const box = document.getElementById("wishlistContent");
@@ -834,7 +958,7 @@
       currentProduct = p;
       appliedCoupon = null;
       document.getElementById("couponInput").value = "";
-      const img = p.image_url ? `<img src="${p.image_url}" style="width:120px;height:120px;object-fit:cover;border-radius:14px;margin:auto;border:2px solid var(--blue);">` : `<div style="font-size:3.5rem;">${p.emoji||"📦"}</div>`;
+      const img = p.image_url ? `<img src="${p.image_url}" style="width:120px;height:120px;object-fit:contain;border-radius:14px;margin:auto;border:2px solid var(--blue);background:var(--black);padding:4px;">` : `<div style="font-size:3.5rem;">${p.emoji||"📦"}</div>`;
       document.getElementById("orderProductPreview").innerHTML = `
         ${img}
         <h4 style="margin-top:10px;color:#eef3fb;">${p.name}</h4>
@@ -872,22 +996,21 @@
       renderOrderSummary();
     }
 
-    /* ================= كوبونات الخصم ================= */
+    /* ================= كوبونات ================= */
     async function applyCoupon(){
       const code = document.getElementById("couponInput").value.trim().toUpperCase();
       if(!code){ showToast("⚠️ أدخل الكود", "error"); return; }
       try{
         const { data } = await sb.from("coupons").select("*").eq("code", code).eq("active", true).maybeSingle();
         if(!data){ showToast("❌ كود غير صالح", "error"); appliedCoupon = null; renderOrderSummary(); return; }
-        if(data.expires_at && new Date(data.expires_at) < new Date()){ showToast("❌ انتهت صلاحية الكود", "error"); appliedCoupon = null; renderOrderSummary(); return; }
-        if(data.uses >= data.max_uses){ showToast("❌ استُنفد الكود", "error"); appliedCoupon = null; renderOrderSummary(); return; }
+        if(data.expires_at && new Date(data.expires_at) < new Date()){ showToast("❌ انتهت الصلاحية", "error"); appliedCoupon = null; renderOrderSummary(); return; }
+        if(data.uses >= data.max_uses){ showToast("❌ استُنفد", "error"); appliedCoupon = null; renderOrderSummary(); return; }
         appliedCoupon = data;
-        showToast(`✅ تم تطبيق خصم ${data.discount_percent}%`, "success");
+        showToast(`✅ خصم ${data.discount_percent}%`, "success");
         renderOrderSummary();
-      }catch(e){ showToast("❌ خطأ في الكود", "error"); }
+      }catch(e){ showToast("❌ خطأ", "error"); }
     }
 
-    /* ================= ملخص الطلب ================= */
     function calcTotals(){
       if(!currentProduct) return { subtotal:0, shipping:0, total:0, discount:0 };
       const qty = Number(document.getElementById("cQty").value) || 1;
@@ -954,12 +1077,10 @@
           status: "قيد المراجعة"
         });
 
-        // تحديث عداد الكوبون
         if(appliedCoupon){
           await sb.from("coupons").update({ uses: (appliedCoupon.uses || 0) + 1 }).eq("code", appliedCoupon.code);
         }
 
-        // تحديث مبيعات ومخزون المنتج
         const newSold = (currentProduct.sold || 0) + qty;
         const newStock = currentProduct.stock !== null ? currentProduct.stock - qty : null;
         await sb.from("products").update({ sold: newSold, stock: newStock }).eq("id", currentProduct.id);
@@ -1081,7 +1202,6 @@
         COUPONS = data || [];
         renderAdminCoupons();
       }catch(e){ console.error(e); }
-      // تعبئة الفئات
       try{
         const { data } = await sb.from("categories").select("*");
         const sel = document.getElementById("pCategory");
@@ -1106,13 +1226,14 @@
       }
       box.innerHTML = PRODUCTS.map(p => {
         const thumb = p.image_url ? `<img src="${p.image_url}">` : (p.emoji || "📦");
+        const imgCount = 1 + (p.image_urls ? p.image_urls.length : 0);
         return `
         <div class="admin-product">
           <div class="pinfo">
             <div class="pthumb">${thumb}</div>
             <div>
               <h4>${p.name} ${p.featured ? '⭐' : ''}</h4>
-              <span>${Number(p.price).toLocaleString()} DZD • مخزون: ${p.stock}</span>
+              <span>${Number(p.price).toLocaleString()} DZD • 📷 ${imgCount} • مخزون: ${p.stock}</span>
             </div>
           </div>
           <div class="actions">
@@ -1147,7 +1268,7 @@
             📍 ${o.wilaya} — ${o.address||""}<br>
             ${o.coupon_code ? `🎁 كوبون: ${o.coupon_code}<br>` : ''}
             💰 <strong style="color:var(--blue-light);">${Number(o.total).toLocaleString()} DZD</strong>
-            <a href="https://wa.me/213${o.customer_phone.replace(/\D/g,'').replace(/^0/,'')}" target="_blank" style="color:#25D366;font-weight:700;margin-right:8px;">📱 واتساب الزبون</a>
+            <a href="https://wa.me/213${o.customer_phone.replace(/\D/g,'').replace(/^0/,'')}" target="_blank" style="color:#25D366;font-weight:700;margin-right:8px;">📱 واتساب</a>
           </div>
         </div>
       `).join("");
@@ -1193,6 +1314,7 @@
     function showProductForm(){
       editingProductId = null;
       uploadedImageUrl = null;
+      pendingImages = [];
       document.getElementById("pName").value = "";
       document.getElementById("pDesc").value = "";
       document.getElementById("pPrice").value = "";
@@ -1200,17 +1322,18 @@
       document.getElementById("pStock").value = 100;
       document.getElementById("pFeatured").value = "false";
       document.getElementById("pImageInput").value = "";
-      document.getElementById("pImagePreview").classList.remove("show");
+      document.getElementById("pImagesPreviews").innerHTML = "";
       document.getElementById("adminProductForm").style.display = "block";
     }
     function hideProductForm(){
       document.getElementById("adminProductForm").style.display = "none";
-      editingProductId = null; uploadedImageUrl = null;
+      editingProductId = null; uploadedImageUrl = null; pendingImages = [];
     }
     function editProduct(id){
       const p = PRODUCTS.find(x => x.id === id); if(!p) return;
       editingProductId = id;
       uploadedImageUrl = p.image_url || null;
+      pendingImages = [];
       document.getElementById("pName").value = p.name;
       document.getElementById("pDesc").value = p.description || "";
       document.getElementById("pPrice").value = p.price;
@@ -1218,20 +1341,49 @@
       document.getElementById("pStock").value = p.stock || 100;
       document.getElementById("pFeatured").value = p.featured ? "true" : "false";
       if(p.category) document.getElementById("pCategory").value = p.category;
-      const preview = document.getElementById("pImagePreview");
-      if(p.image_url){ preview.src = p.image_url; preview.classList.add("show"); }
-      else preview.classList.remove("show");
+      
+      // عرض الصور الحالية
+      const box = document.getElementById("pImagesPreviews");
+      box.innerHTML = "";
+      const allImgs = [];
+      if(p.image_url) allImgs.push(p.image_url);
+      if(p.image_urls && Array.isArray(p.image_urls)) allImgs.push(...p.image_urls);
+      allImgs.forEach((url, i) => {
+        box.innerHTML += `
+          <div class="image-preview-item">
+            <img src="${url}">
+            <div class="main-badge">${i === 0 ? 'الرئيسية' : '#'+(i+1)}</div>
+          </div>
+        `;
+      });
+      
       document.getElementById("adminProductForm").style.display = "block";
     }
-    function previewImage(e){
-      const file = e.target.files[0]; if(!file) return;
-      const reader = new FileReader();
-      reader.onload = ev => {
-        const preview = document.getElementById("pImagePreview");
-        preview.src = ev.target.result; preview.classList.add("show");
-      };
-      reader.readAsDataURL(file);
+
+    /* ================= رفع صور متعددة ================= */
+    function previewImages(e){
+      const files = Array.from(e.target.files);
+      if(!files.length) return;
+      
+      pendingImages = files;
+      const box = document.getElementById("pImagesPreviews");
+      box.innerHTML = '';
+      
+      files.forEach((file, i) => {
+        const reader = new FileReader();
+        reader.onload = ev => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'image-preview-item';
+          wrapper.innerHTML = `
+            <img src="${ev.target.result}">
+            <div class="main-badge">${i === 0 ? 'الرئيسية' : '#'+(i+1)}</div>
+          `;
+          box.appendChild(wrapper);
+        };
+        reader.readAsDataURL(file);
+      });
     }
+
     async function uploadImage(file){
       const ext = file.name.split(".").pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
@@ -1240,6 +1392,7 @@
       const { data: urlData } = sb.storage.from(STORAGE_BUCKET).getPublicUrl(fileName);
       return urlData.publicUrl;
     }
+
     async function saveProduct(){
       const name = document.getElementById("pName").value.trim();
       const desc = document.getElementById("pDesc").value.trim();
@@ -1248,7 +1401,6 @@
       const category = document.getElementById("pCategory").value;
       const stock = Number(document.getElementById("pStock").value) || 0;
       const featured = document.getElementById("pFeatured").value === "true";
-      const file = document.getElementById("pImageInput").files[0];
       
       if(!name || !price){ showToast("⚠️ الاسم والسعر مطلوبان", "error"); return; }
       
@@ -1256,12 +1408,22 @@
       btn.disabled = true;
       try{
         let imageUrl = uploadedImageUrl;
-        if(file){ btn.textContent = t("loading_upload"); imageUrl = await uploadImage(file); }
+        let extraImages = [];
+        
+        // ✅ رفع صور متعددة
+        if(pendingImages.length > 0){
+          btn.textContent = t("loading_upload");
+          for(let i = 0; i < pendingImages.length; i++){
+            const url = await uploadImage(pendingImages[i]);
+            if(i === 0) imageUrl = url;
+            else extraImages.push(url);
+          }
+        }
         
         const discountPercent = oldPrice && oldPrice > price ? Math.round((1 - price/oldPrice) * 100) : 0;
         const payload = { 
           name, description: desc, price, old_price: oldPrice, discount_percent: discountPercent,
-          image_url: imageUrl, category, stock, featured, active: true 
+          image_url: imageUrl, image_urls: extraImages, category, stock, featured, active: true 
         };
         
         if(editingProductId){
