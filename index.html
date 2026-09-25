@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rahim Store | الأزرق الملكي</title>
+    <link id="faviconLink" rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💎</text></svg>">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root{
+          --blue:#1e5fbf;
+          --blue-light:#4a8fe7;
+          --blue-dark:#0d3a7a;
+          --blue-glow:#2a7fff;
+          --black:#05080f;
+          --black-2:#0a111f;
+          --black-3:#101a2e;
+          --gray:#7a8aa3;
+          --border:#1a2942;
+          --danger:#e74c3c;
+          --success:#27ae60;
+          --warning:#f39c12;
+          --radius:16px;
+        }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,sans-serif;}
+        body{
+          background:var(--black);color:#eef3fb;line-height:1.7;min-height:100vh;
+          background-image:
+            radial-gradient(circle at 20% 10%, rgba(30,95,191,.12) 0%, transparent 45%),
+            radial-gradient(circle at 80% 90%, rgba(42,127,255,.08) 0%, transparent 45%);
+        }
+        a{text-decoration:none;color:inherit;}
+        img{max-width:100%;display:block;}
+
+        header{background:rgba(5,8,15,.95);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);}
+        .nav{max-width:1250px;margin:auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+        .logo{display:flex;align-items:center;gap:12px;cursor:pointer;}
+        .logo-img{width:48px;height:48px;object-fit:contain;border-radius:50%;border:2px solid var(--blue);padding:2px;background:var(--black-2);display:none;transition:.3s;box-shadow:0 0 20px rgba(42,127,255,.4);}
+        .logo-img.show{display:block;}
+        .logo-img:hover{transform:scale(1.08);}
+        .logo-text{font-size:1.6rem;font-weight:900;letter-spacing:2px;background:linear-gradient(135deg,var(--blue-light),var(--blue),var(--blue-dark));-webkit-background-clip:text;background-clip:text;color:transparent;}
+        .logo-text span{color:#fff;-webkit-text-fill-color:#fff;}
+        .nav-links{display:flex;gap:24px;font-weight:600;color:#8fa3c4;font-size:.95rem;}
+        .nav-links a:hover{color:var(--blue-light);}
+        .nav-actions{display:flex;align-items:center;gap:8px;}
+        .icon-btn{background:var(--black-3);border:1px solid var(--border);color:var(--blue-light);cursor:pointer;padding:8px 14px;border-radius:50px;font-weight:700;font-size:.85rem;transition:.25s;position:relative;}
+        .icon-btn:hover{background:var(--blue);color:#fff;border-color:var(--blue);}
+        .badge{position:absolute;top:-6px;right:-6px;background:var(--danger);color:#fff;font-size:.65rem;padding:2px 6px;border-radius:50px;font-weight:800;}
+
+        .hero{text-align:center;padding:80px 20px 70px;position:relative;overflow:hidden;}
+        .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center, rgba(42,127,255,.15) 0%, transparent 60%);pointer-events:none;}
+        .hero-logo{width:130px;height:130px;object-fit:contain;margin:0 auto 22px;display:none;border-radius:50%;padding:8px;background:rgba(42,127,255,.08);border:2px solid var(--blue);box-shadow:0 0 50px rgba(42,127,255,.5);animation:heroGlow 3s ease-in-out infinite alternate;}
+        .hero-logo.show{display:block;}
+        @keyframes heroGlow{from{box-shadow:0 0 30px rgba(42,127,255,.3);}to{box-shadow:0 0 60px rgba(42,127,255,.7);}}
+        .hero h1{font-size:3rem;font-weight:900;margin-bottom:16px;line-height:1.2;background:linear-gradient(135deg,#fff,var(--blue-light),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent;}
+        .hero p{font-size:1.15rem;color:#8fa3c4;max-width:600px;margin:auto;}
+        .hero button{margin-top:32px;background:linear-gradient(135deg,var(--blue-light),var(--blue),var(--blue-dark));color:#fff;border:none;padding:16px 42px;border-radius:50px;font-size:1rem;font-weight:800;cursor:pointer;transition:.3s;box-shadow:0 8px 32px rgba(42,127,255,.4);letter-spacing:.5px;}
+        .hero button:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(42,127,255,.6);}
+        .blue-line{height:2px;width:80px;background:linear-gradient(90deg,transparent,var(--blue),transparent);margin:20px auto;}
+
+        /* شريط الإعلانات */
+        .marquee{background:linear-gradient(90deg,var(--blue-dark),var(--blue),var(--blue-dark));color:#fff;padding:10px 0;overflow:hidden;white-space:nowrap;font-weight:700;font-size:.9rem;}
+        .marquee span{display:inline-block;padding-left:100%;animation:marquee 20s linear infinite;}
+        @keyframes marquee{0%{transform:translateX(0);}100%{transform:translateX(-100%);}}
+
+        .section{max-width:1250px;margin:auto;padding:60px 22px;}
+        .section-title{font-size:2rem;font-weight:900;margin-bottom:10px;text-align:center;background:linear-gradient(135deg,#fff,var(--blue-light));-webkit-background-clip:text;background-clip:text;color:transparent;}
+        .section-sub{text-align:center;color:var(--gray);margin-bottom:44px;}
+
+        /* فلاتر الفئات */
+        .filters{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:30px;}
+        .filter-btn{background:var(--black-3);border:1px solid var(--border);color:var(--blue-light);padding:9px 20px;border-radius:50px;font-weight:700;cursor:pointer;font-size:.9rem;transition:.25s;}
+        .filter-btn:hover{border-color:var(--blue);}
+        .filter-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+
+        /* البحث */
+        .search-box{max-width:500px;margin:0 auto 30px;position:relative;}
+        .search-box input{width:100%;padding:14px 48px 14px 20px;background:var(--black-2);color:#eef3fb;border:1px solid var(--border);border-radius:50px;font-size:1rem;outline:none;}
+        .search-box input:focus{border-color:var(--blue);}
+        .search-box::before{content:'🔍';position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:1.1rem;}
+
+        .products{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:26px;}
+        .card{background:linear-gradient(160deg,var(--black-2),var(--black-3));border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:.35s;display:flex;flex-direction:column;position:relative;}
+        .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--blue-light),transparent);opacity:0;transition:.35s;}
+        .card:hover{transform:translateY(-8px);border-color:var(--blue);box-shadow:0 20px 50px rgba(42,127,255,.15);}
+        .card:hover::before{opacity:1;}
+        .card-img{height:230px;background:var(--black);display:grid;place-items:center;font-size:4rem;overflow:hidden;position:relative;}
+        .card-img img{width:100%;height:100%;object-fit:cover;transition:.5s;}
+        .card:hover .card-img img{transform:scale(1.08);}
+        .card-body{padding:18px;display:flex;flex-direction:column;gap:10px;flex:1;}
+        .card-title{font-weight:700;font-size:1.1rem;color:#eef3fb;}
+        .card-category{font-size:.75rem;color:var(--gray);}
+        .price-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+        .card-price{font-weight:900;font-size:1.35rem;background:linear-gradient(135deg,var(--blue-light),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent;}
+        .card-price small{color:var(--gray);font-weight:500;font-size:.8rem;-webkit-text-fill-color:var(--gray);}
+        .old-price{color:var(--gray);text-decoration:line-through;font-size:.9rem;}
+        .discount-tag{position:absolute;top:10px;left:10px;background:var(--danger);color:#fff;padding:4px 10px;border-radius:8px;font-weight:800;font-size:.75rem;z-index:2;}
+        .featured-tag{position:absolute;top:10px;right:10px;background:linear-gradient(135deg,var(--warning),#e67e22);color:#fff;padding:4px 10px;border-radius:8px;font-weight:800;font-size:.75rem;z-index:2;}
+        .stock-warning{font-size:.75rem;color:var(--warning);font-weight:700;}
+        .out-of-stock{position:absolute;inset:0;background:rgba(0,0,0,.75);display:grid;place-items:center;color:var(--danger);font-weight:900;font-size:1.2rem;z-index:3;}
+        .rating{font-size:.85rem;color:#f39c12;font-weight:700;}
+        .add-btn{margin-top:auto;background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;border:none;padding:13px;border-radius:10px;font-weight:800;cursor:pointer;transition:.25s;font-size:.95rem;letter-spacing:.5px;}
+        .add-btn:hover{background:linear-gradient(135deg,var(--blue-light),var(--blue));box-shadow:0 8px 24px rgba(42,127,255,.4);}
+        .add-btn:disabled{opacity:.5;cursor:not-allowed;background:var(--gray);}
+        .loading{text-align:center;padding:60px;color:var(--gray);grid-column:1/-1;font-size:1.1rem;}
+
+        .overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;z-index:200;backdrop-filter:blur(4px);}
+        .overlay.open{display:block;}
+        .panel{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.92);width:520px;max-width:94%;max-height:92vh;overflow-y:auto;background:linear-gradient(160deg,var(--black-2),var(--black));border:1px solid var(--blue-dark);border-radius:20px;z-index:201;padding:30px;display:none;opacity:0;transition:.3s;box-shadow:0 30px 80px rgba(0,0,0,.8),0 0 60px rgba(42,127,255,.1);}
+        .panel.open{display:block;opacity:1;transform:translate(-50%,-50%) scale(1);}
+        .panel h3{margin-bottom:20px;text-align:center;font-size:1.4rem;background:linear-gradient(135deg,#fff,var(--blue-light));-webkit-background-clip:text;background-clip:text;color:transparent;}
+        .panel::-webkit-scrollbar{width:8px;}
+        .panel::-webkit-scrollbar-track{background:var(--black);}
+        .panel::-webkit-scrollbar-thumb{background:var(--blue-dark);border-radius:4px;}
+
+        .field{margin-bottom:16px;}
+        .field label{display:block;font-size:.85rem;font-weight:700;margin-bottom:7px;color:var(--blue-light);letter-spacing:.3px;}
+        .field input,.field select,.field textarea{width:100%;padding:13px 15px;background:var(--black);color:#eef3fb;border:1px solid var(--border);border-radius:10px;font-size:.95rem;outline:none;font-family:inherit;transition:.25s;}
+        .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(42,127,255,.15);}
+        .field input::placeholder,.field textarea::placeholder{color:#4a5a75;}
+
+        .cod-badge{background:linear-gradient(135deg,rgba(42,127,255,.15),rgba(42,127,255,.05));border:1px solid var(--blue-dark);color:var(--blue-light);padding:12px;border-radius:10px;font-weight:700;text-align:center;margin-bottom:16px;font-size:.9rem;}
+        .order-summary{background:rgba(42,127,255,.05);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:18px;font-size:.9rem;}
+        .order-summary .row{display:flex;justify-content:space-between;margin-bottom:8px;color:#a8b8d0;}
+        .order-summary .row.total{font-weight:900;color:var(--blue-light);font-size:1.05rem;border-top:1px dashed var(--border);padding-top:10px;margin-top:10px;}
+        .order-summary .row.discount{color:var(--success);font-weight:700;}
+
+        .coupon-box{display:flex;gap:8px;margin-bottom:12px;}
+        .coupon-box input{flex:1;padding:11px;background:var(--black);color:#eef3fb;border:1px solid var(--border);border-radius:10px;font-size:.9rem;outline:none;font-family:inherit;}
+        .coupon-box input:focus{border-color:var(--blue);}
+        .coupon-box button{background:var(--blue);color:#fff;border:none;padding:11px 20px;border-radius:10px;font-weight:700;cursor:pointer;font-size:.9rem;transition:.25s;}
+        .coupon-box button:hover{background:var(--blue-light);}
+
+        .submit-btn{width:100%;background:linear-gradient(135deg,var(--blue-light),var(--blue),var(--blue-dark));color:#fff;border:none;padding:15px;border-radius:12px;font-weight:900;cursor:pointer;font-size:1rem;letter-spacing:.5px;transition:.25s;}
+        .submit-btn:hover{box-shadow:0 8px 28px rgba(42,127,255,.5);transform:translateY(-2px);}
+        .submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+
+        .success-icon{font-size:5rem;margin-bottom:16px;text-align:center;filter:drop-shadow(0 0 30px rgba(42,127,255,.6));}
+        .order-id{background:rgba(42,127,255,.1);border:1px dashed var(--blue);padding:14px;border-radius:12px;font-weight:900;color:var(--blue-light);margin:18px 0;font-size:1.2rem;letter-spacing:2px;text-align:center;}
+        .success-panel p{color:var(--gray);text-align:center;margin-bottom:8px;}
+        .success-panel .btn-row{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap;}
+        .success-panel button{background:var(--black-3);color:var(--blue-light);border:1px solid var(--blue-dark);padding:12px 22px;border-radius:50px;font-weight:700;cursor:pointer;transition:.25s;font-size:.9rem;}
+        .success-panel button:hover{background:var(--blue);color:#fff;}
+        .success-panel button.wa{background:#25D366;color:#fff;border-color:#25D366;}
+        .success-panel button.wa:hover{background:#1da851;}
+
+        .track-box{max-width:580px;margin:auto;background:linear-gradient(160deg,var(--black-2),var(--black));border:1px solid var(--border);border-radius:var(--radius);padding:32px;}
+        .track-box input{width:100%;padding:14px;background:var(--black);color:#eef3fb;border:1px solid var(--border);border-radius:10px;font-size:1rem;outline:none;margin-bottom:14px;}
+        .track-box input:focus{border-color:var(--blue);}
+        .track-box > button{width:100%;background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;border:none;padding:14px;border-radius:10px;font-weight:800;cursor:pointer;font-size:1rem;}
+        .track-result{margin-top:22px;padding:20px;background:rgba(42,127,255,.05);border-radius:12px;display:none;border:1px solid var(--border);}
+        .track-result.show{display:block;}
+        .track-result .status{display:inline-block;background:rgba(39,174,96,.2);color:#2ecc71;padding:5px 16px;border-radius:50px;font-weight:700;font-size:.85rem;margin-bottom:14px;}
+        .track-result .status.notfound{background:rgba(231,76,60,.2);color:#e74c3c;}
+        .track-result .line{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--border);font-size:.9rem;}
+        .track-result .line:last-child{border:none;}
+
+        .admin-tabs{display:flex;gap:6px;margin-bottom:22px;border-bottom:1px solid var(--border);overflow-x:auto;}
+        .admin-tab{padding:10px 20px;cursor:pointer;font-weight:700;color:var(--gray);border-bottom:2px solid transparent;transition:.25s;font-size:.9rem;white-space:nowrap;}
+        .admin-tab.active{color:var(--blue-light);border-color:var(--blue);}
+        .admin-tab:hover{color:var(--blue-light);}
+        .admin-tab-content{display:none;}
+        .admin-tab-content.active{display:block;}
+
+        .admin-product{background:rgba(42,127,255,.03);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:12px;transition:.25s;}
+        .admin-product:hover{border-color:var(--blue-dark);}
+        .admin-product .pinfo{flex:1;display:flex;gap:12px;align-items:center;}
+        .admin-product .pthumb{width:50px;height:50px;border-radius:8px;background:var(--black);overflow:hidden;display:grid;place-items:center;font-size:1.5rem;flex-shrink:0;}
+        .admin-product .pthumb img{width:100%;height:100%;object-fit:cover;}
+        .admin-product .pinfo h4{font-size:.95rem;color:#eef3fb;}
+        .admin-product .pinfo span{color:var(--blue-light);font-weight:700;font-size:.85rem;}
+        .admin-product .actions{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;}
+
+        .btn-sm{padding:7px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:700;font-size:.78rem;transition:.2s;}
+        .btn-edit{background:var(--blue);color:#fff;}
+        .btn-edit:hover{background:var(--blue-light);}
+        .btn-del{background:var(--danger);color:#fff;}
+        .btn-del:hover{background:#c0392b;}
+        .btn-feat{background:var(--warning);color:#fff;}
+        .btn-feat:hover{background:#e67e22;}
+        .btn-add{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;width:100%;padding:13px;border-radius:10px;font-weight:800;cursor:pointer;border:none;margin-bottom:16px;font-size:.95rem;}
+        .btn-add:hover{background:linear-gradient(135deg,var(--blue-light),var(--blue));}
+
+        .image-picker{border:2px dashed var(--blue-dark);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:.25s;background:rgba(42,127,255,.03);}
+        .image-picker:hover{border-color:var(--blue);background:rgba(42,127,255,.08);}
+        .image-picker input{display:none;}
+        .image-preview{width:100%;height:180px;object-fit:cover;border-radius:10px;margin-top:12px;display:none;}
+        .image-preview.show{display:block;}
+
+        .logo-picker-preview{width:120px;height:120px;object-fit:contain;border-radius:50%;background:var(--black);border:2px solid var(--blue);padding:8px;margin:14px auto;display:none;}
+        .logo-picker-preview.show{display:block;}
+
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;}
+        .stat-card{background:linear-gradient(160deg,var(--black-2),var(--black-3));border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center;}
+        .stat-card .num{font-size:1.8rem;font-weight:900;color:var(--blue-light);}
+        .stat-card .lbl{font-size:.8rem;color:var(--gray);margin-top:4px;}
+
+        .toast{position:fixed;bottom:28px;left:50%;transform:translate(-50%,150%);background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;padding:14px 26px;border-radius:50px;font-weight:800;z-index:400;transition:.4s;box-shadow:0 12px 40px rgba(42,127,255,.5);max-width:90%;text-align:center;}
+        .toast.show{transform:translate(-50%,0);}
+        .toast.success{background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;}
+        .toast.error{background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;}
+
+        footer{background:var(--black-2);color:var(--gray);text-align:center;padding:36px 20px;margin-top:60px;border-top:1px solid var(--border);}
+        .footer-logo{width:60px;height:60px;object-fit:contain;border-radius:50%;border:2px solid var(--blue);padding:4px;margin:0 auto 14px;background:var(--black);display:none;}
+        .footer-logo.show{display:block;}
+        footer strong{background:linear-gradient(135deg,var(--blue-light),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:900;}
+
+        @media(max-width:700px){
+          .nav-links{display:none;}
+          .hero h1{font-size:2rem;}
+          .hero p{font-size:1rem;}
+          .section-title{font-size:1.5rem;}
+          .panel{width:96%;padding:22px;}
+          .admin-product{flex-wrap:wrap;}
+          .logo-img{width:40px;height:40px;}
+          .logo-text{font-size:1.3rem;}
+        }
+    </style>
+</head>
+<body>
+
+<!-- شريط الإعلانات -->
+<div class="marquee">
+  <span>🚚 توصيل لجميع الولايات • 💵 الدفع عند الاستلام • 🎁 خصم 10% بكود WELCOME10 • ⭐ منتجات أصلية مضمونة</span>
+</div>
+
+<header>
+    <div class="nav">
+        <div class="logo" onclick="showHome()">
+            <img id="headerLogo" class="logo-img" alt="Logo">
+            <div class="logo-text">RAHIM <span>STORE</span></div>
+        </div>
+        <nav class="nav-links">
+            <a href="#" onclick="showHome();return false;" data-i18n="nav_home"></a>
+            <a href="#products" onclick="showHome();return false;" data-i18n="nav_products"></a>
+            <a href="#" onclick="showTrack();return false;" data-i18n="nav_track"></a>
+            <a href="#contact" onclick="showHome();return false;" data-i18n="nav_contact"></a>
+        </nav>
+        <div class="nav-actions">
+            <button class="icon-btn" onclick="openWishlist()" title="المفضلة">❤️<span class="badge" id="wishlistBadge" style="display:none;">0</span></button>
+            <button class="icon-btn" onclick="toggleLang()" id="langBtn">FR</button>
+            <button class="icon-btn" onclick="openAdminLogin()" title="Admin">🔑</button>
+        </div>
+    </div>
+</header>
+
+<div id="homeView">
+    <section class="hero">
+        <img id="heroLogo" class="hero-logo" alt="Logo">
+        <h1 data-i18n="hero_title"></h1>
+        <div class="blue-line"></div>
+        <p data-i18n="hero_sub"></p>
+        <button onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})" data-i18n="hero_btn"></button>
+    </section>
+
+    <section class="section" id="products">
+        <h2 class="section-title" data-i18n="products_title"></h2>
+        <div class="blue-line"></div>
+        <p class="section-sub" data-i18n="products_sub"></p>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 ابحث عن منتج..." oninput="filterProducts()">
+        </div>
+
+        <div class="filters" id="filtersBox">
+            <button class="filter-btn active" onclick="setCategory('all', this)">الكل</button>
+        </div>
+
+        <div class="products" id="productsGrid">
+            <div class="loading" data-i18n="loading_products"></div>
+        </div>
+    </section>
+
+    <section class="section" style="background:linear-gradient(160deg,var(--black-2),var(--black));border-radius:var(--radius);border:1px solid var(--border);">
+        <h2 class="section-title" data-i18n="about_title"></h2>
+        <div class="blue-line"></div>
+        <p class="section-sub" style="max-width:700px;margin:auto;" data-i18n="about_text"></p>
+    </section>
+
+    <section class="section" id="contact">
+        <h2 class="section-title" data-i18n="contact_title"></h2>
+        <div class="blue-line"></div>
+        <p class="section-sub">
+            📞 <strong style="color:var(--blue-light);">0549 99 58 97</strong><br>
+            📸 <a href="https://instagram.com/abdo._ms_" target="_blank" style="color:var(--blue-light);font-weight:700;">@abdo._ms_</a><br>
+            📍 <span data-i18n="contact_location"></span>
+        </p>
+    </section>
+</div>
+
+<div id="trackView" style="display:none;">
+    <section class="section" style="padding-top:50px;">
+        <h2 class="section-title" data-i18n="track_title"></h2>
+        <div class="blue-line"></div>
+        <p class="section-sub" data-i18n="track_sub"></p>
+        <div class="track-box">
+            <input type="text" id="trackInput" data-i18n-ph="track_placeholder">
+            <button onclick="trackOrder()" data-i18n="track_btn"></button>
+            <div class="track-result" id="trackResult"></div>
+        </div>
+    </section>
+</div>
+
+<footer>
+    <img id="footerLogo" class="footer-logo" alt="Logo">
+    <p>© 2026 <strong>RAHIM STORE</strong> — <span data-i18n="footer_rights"></span></p>
+    <p style="font-size:.85rem;margin-top:8px;" data-i18n="footer_made"></p>
+</footer>
+
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+<!-- Order Form -->
+<div class="panel" id="orderPanel">
+    <h3>📦 <span data-i18n="order_title"></span></h3>
+    <div id="orderProductPreview" style="text-align:center;margin-bottom:20px;"></div>
+    <form id="orderForm" onsubmit="submitOrder(event)">
+        <div class="field"><label data-i18n="f_name"></label><input type="text" id="cName" required></div>
+        <div class="field"><label data-i18n="f_phone"></label><input type="tel" id="cPhone" required placeholder="0549 99 58 97"></div>
+        <div class="field">
+            <label data-i18n="f_wilaya"></label>
+            <select id="cWilaya" required onchange="onWilayaChange()"><option value="" data-i18n="f_wilaya_choose"></option></select>
+        </div>
+        <div class="field" id="communeField" style="display:none;">
+            <label data-i18n="f_commune"></label>
+            <select id="cCommune" required onchange="renderOrderSummary()"><option value="" data-i18n="f_commune_choose"></option></select>
+        </div>
+        <div class="field"><label data-i18n="f_address"></label><textarea id="cAddress" rows="2" required></textarea></div>
+        <div class="field"><label data-i18n="f_qty"></label><input type="number" id="cQty" value="1" min="1" required onchange="renderOrderSummary()" oninput="renderOrderSummary()"></div>
+
+        <div class="coupon-box">
+            <input type="text" id="couponInput" placeholder="🎁 كود الخصم (اختياري)">
+            <button type="button" onclick="applyCoupon()">تطبيق</button>
+        </div>
+
+        <div class="cod-badge" data-i18n="cod_only"></div>
+        <div class="order-summary" id="orderSummary"></div>
+        <button type="submit" class="submit-btn" id="submitBtn" data-i18n="submit_order"></button>
+    </form>
+</div>
+
+<!-- Success -->
+<div class="panel success-panel" id="successPanel">
+    <div class="success-icon">🎉</div>
+    <h3 data-i18n="success_title"></h3>
+    <p data-i18n="success_sub"></p>
+    <div class="order-id" id="successOrderId">RS-000000</div>
+    <p style="font-size:.85rem;" data-i18n="success_keep"></p>
+    <div class="btn-row">
+        <button class="wa" onclick="sendWhatsAppAgain()" data-i18n="btn_wa"></button>
+        <button onclick="closeAll();showTrack();" data-i18n="btn_track"></button>
+    </div>
+</div>
+
+<!-- Wishlist -->
+<div class="panel" id="wishlistPanel">
+    <h3>❤️ قائمة المفضلة</h3>
+    <div id="wishlistContent"></div>
+    <button class="submit-btn" onclick="closeAll()" style="margin-top:16px;">إغلاق</button>
+</div>
+
+<!-- Admin Login -->
+<div class="panel" id="adminLogin">
+    <h3>🔑 <span data-i18n="admin_login"></span></h3>
+    <div class="field"><label data-i18n="admin_password"></label><input type="password" id="adminPass" placeholder="••••••"></div>
+    <button class="submit-btn" onclick="checkAdmin()" data-i18n="admin_enter"></button>
+</div>
+
+<!-- Admin Panel -->
+<div class="panel" id="adminPanel" style="width:700px;">
+    <h3>🛠️ <span data-i18n="admin_title"></span></h3>
+    <div class="admin-tabs">
+        <div class="admin-tab active" onclick="switchAdminTab('stats', this)">📊 إحصائيات</div>
+        <div class="admin-tab" onclick="switchAdminTab('products', this)" data-i18n="admin_tab_products"></div>
+        <div class="admin-tab" onclick="switchAdminTab('orders', this)" data-i18n="admin_tab_orders"></div>
+        <div class="admin-tab" onclick="switchAdminTab('coupons', this)">🎁 الكوبونات</div>
+        <div class="admin-tab" onclick="switchAdminTab('settings', this)" data-i18n="admin_tab_settings"></div>
+    </div>
+
+    <!-- Stats Tab -->
+    <div class="admin-tab-content active" id="tab-stats">
+        <div class="stats-grid">
+            <div class="stat-card"><div class="num" id="statProducts">0</div><div class="lbl">المنتجات</div></div>
+            <div class="stat-card"><div class="num" id="statOrders">0</div><div class="lbl">الطلبات</div></div>
+            <div class="stat-card"><div class="num" id="statPending">0</div><div class="lbl">قيد المراجعة</div></div>
+            <div class="stat-card"><div class="num" id="statRevenue">0</div><div class="lbl">الإيرادات (DZD)</div></div>
+        </div>
+    </div>
+
+    <!-- Products Tab -->
+    <div class="admin-tab-content" id="tab-products">
+        <button class="btn-add" onclick="showProductForm()" data-i18n="admin_add_product"></button>
+        <div id="adminProductForm" style="display:none;background:rgba(42,127,255,.05);padding:16px;border-radius:12px;margin-bottom:16px;border:1px solid var(--border);">
+            <div class="field"><label data-i18n="f_name"></label><input type="text" id="pName"></div>
+            <div class="field"><label>الوصف</label><textarea id="pDesc" rows="2"></textarea></div>
+            <div class="field"><label data-i18n="f_price"></label><input type="number" id="pPrice"></div>
+            <div class="field"><label>السعر القديم (للتخفيض)</label><input type="number" id="pOldPrice"></div>
+            <div class="field"><label>الفئة</label><select id="pCategory"></select></div>
+            <div class="field"><label>المخزون</label><input type="number" id="pStock" value="100"></div>
+            <div class="field"><label>منتج مميز؟</label><select id="pFeatured"><option value="false">لا</option><option value="true">نعم</option></select></div>
+            <div class="field">
+                <label data-i18n="f_image"></label>
+                <label class="image-picker" for="pImageInput">
+                    <div style="font-size:2rem;">📷</div>
+                    <p style="color:var(--blue-light);margin-top:6px;" data-i18n="tap_to_upload"></p>
+                    <input type="file" id="pImageInput" accept="image/*" onchange="previewImage(event)">
+                </label>
+                <img id="pImagePreview" class="image-preview" alt="preview">
+            </div>
+            <button class="submit-btn" onclick="saveProduct()" id="pSaveBtn" data-i18n="admin_save"></button>
+            <button class="btn-del" onclick="hideProductForm()" style="width:100%;margin-top:8px;padding:11px;border-radius:10px;" data-i18n="admin_cancel"></button>
+        </div>
+        <div id="adminProductsList"></div>
+    </div>
+
+    <!-- Orders Tab -->
+    <div class="admin-tab-content" id="tab-orders">
+        <div id="adminOrdersList"></div>
+    </div>
+
+    <!-- Coupons Tab -->
+    <div class="admin-tab-content" id="tab-coupons">
+        <div style="background:rgba(42,127,255,.05);padding:16px;border-radius:12px;margin-bottom:16px;border:1px solid var(--border);">
+            <div class="field"><label>كود الكوبون</label><input type="text" id="cpCode" placeholder="مثال: SALE30"></div>
+            <div class="field"><label>نسبة الخصم %</label><input type="number" id="cpDiscount" value="10" min="1" max="100"></div>
+            <div class="field"><label>الحد الأدنى للطلب</label><input type="number" id="cpMin" value="0"></div>
+            <div class="field"><label>عدد الاستخدامات الأقصى</label><input type="number" id="cpMaxUses" value="100"></div>
+            <button class="submit-btn" onclick="saveCoupon()">💾 إضافة الكوبون</button>
+        </div>
+        <div id="adminCouponsList"></div>
+    </div>
+
+    <!-- Settings Tab -->
+    <div class="admin-tab-content" id="tab-settings">
+        <div class="field">
+            <label data-i18n="f_logo"></label>
+            <label class="image-picker" for="logoInput">
+                <div style="font-size:2.5rem;">💎</div>
+                <p style="color:var(--blue-light);margin-top:6px;" data-i18n="tap_to_upload_logo"></p>
+                <input type="file" id="logoInput" accept="image/*" onchange="previewLogo(event)">
+            </label>
+            <img id="logoPickerPreview" class="logo-picker-preview" alt="Logo Preview">
+        </div>
+        <button class="submit-btn" onclick="saveLogo()" id="logoSaveBtn" data-i18n="admin_save_logo"></button>
+        <button class="btn-del" onclick="removeLogo()" style="width:100%;margin-top:10px;padding:11px;border-radius:10px;" data-i18n="admin_remove_logo"></button>
+    </div>
+
+    <button class="btn-del" onclick="closeAll()" style="width:100%;margin-top:16px;padding:12px;border-radius:10px;font-size:.9rem;" data-i18n="admin_close"></button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+    /* ================= الإعدادات ================= */
+    const WHATSAPP_NUMBER = "213549995897";
+    const SUPABASE_URL = "https://xdgpcwtprppgvpekgiuw.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_tUeMxt2zY7mBN_P8IEtnMQ_9t5Vx97m";
+    const ADMIN_PASSWORD = "rahim18caddy";
+    const STORAGE_BUCKET = "products";
+    const STORE_NAME = "RAHIM STORE";
+
+    /* ================= الترجمة ================= */
+    const I18N = {
+      ar:{
+        nav_home:"الرئيسية",nav_products:"المنتجات",nav_track:"تتبع الطلب",nav_contact:"اتصل بنا",
+        hero_title:"RAHIM STORE — الفخامة الزرقاء",hero_sub:"منتجات مختارة بعناية، توصيل سريع لجميع الولايات، والدفع عند الاستلام.",hero_btn:"اكتشف المجموعة",
+        products_title:"مجموعتنا",products_sub:"اختر منتجك واملأ الاستمارة مباشرة",loading_products:"⏳ جاري التحميل...",
+        about_title:"من نحن",about_text:"RAHIM STORE علامة جزائرية تقدم منتجات راقية بأسعار مناسبة، مع خدمة توصيل موثوقة لجميع الولايات.",
+        contact_title:"تواصل معنا",contact_location:"الجزائر",
+        track_title:"تتبع طلبك",track_sub:"أدخل رقم الطلب لمعرفة حالته",track_placeholder:"RS-123456",track_btn:"🔍 ابحث",
+        footer_rights:"جميع الحقوق محفوظة",footer_made:"صُنع بحب في الجزائر 🇩🇿",
+        order_title:"أكمل طلبك",f_name:"الاسم الكامل *",f_phone:"رقم الهاتف *",f_wilaya:"الولاية *",f_wilaya_choose:"اختر الولاية",
+        f_commune:"البلدية *",f_commune_choose:"اختر البلدية",f_address:"العنوان الكامل *",f_qty:"الكمية *",f_image:"صورة المنتج",
+        f_logo:"لوغو المتجر",
+        tap_to_upload:"اضغط لاختيار صورة من هاتفك",
+        tap_to_upload_logo:"اضغط لاختيار اللوغو من هاتفك",
+        cod_only:"💵 الدفع عند الاستلام فقط",
+        submit_order:"✅ تأكيد الطلب",
+        success_title:"تم استلام طلبك!",success_sub:"سنتصل بك قريباً للتأكيد",success_keep:"احتفظ برقم الطلب",
+        btn_wa:"📱 واتساب",btn_track:"🔍 تتبع",
+        buy_now:"اطلب الآن",
+        order_not_found:"❌ الطلب غير موجود",order_not_found_sub:"تأكد من الرقم أو تواصل معنا.",
+        order_id_label:"رقم الطلب:",name_label:"الاسم:",phone_label:"الهاتف:",wilaya_label:"الولاية:",commune_label:"البلدية:",payment_label:"الدفع:",items_label:"المنتجات:",total_label_short:"الإجمالي:",
+        admin_login:"دخول الأدمن",admin_password:"كلمة السر",admin_enter:"دخول",admin_wrong:"❌ كلمة السر خاطئة",
+        admin_title:"لوحة التحكم",admin_tab_products:"المنتجات",admin_tab_orders:"الطلبات",admin_tab_settings:"الإعدادات",
+        admin_add_product:"➕ إضافة منتج",admin_save:"💾 حفظ",admin_cancel:"إلغاء",admin_close:"إغلاق",
+        admin_save_logo:"💾 حفظ اللوغو",admin_remove_logo:"🗑️ حذف اللوغو",
+        admin_no_products:"لا توجد منتجات — أضف منتجك الأول",admin_no_orders:"لا توجد طلبات",
+        admin_edit:"تعديل",admin_del:"حذف",admin_confirm_del:"هل أنت متأكد من الحذف؟",
+        product_added:"✅ تمت إضافة المنتج",product_updated:"✅ تم تحديث المنتج",product_deleted:"🗑️ تم حذف المنتج",
+        logo_saved:"✅ تم حفظ اللوغو بنجاح",logo_removed:"🗑️ تم حذف اللوغو",
+        subtotal_label:"المجموع الفرعي:",shipping_label:"التوصيل:",shipping_free:"مجاني 🎉",total_label:"الإجمالي:",
+        loading_upload:"⏳ جاري رفع الصورة...",upload_failed:"❌ فشل رفع الصورة",
+        willaya_required:"⚠️ اختر الولاية والبلدية",
+        out_of_stock:"نفد المخزون"
+      },
+      fr:{
+        nav_home:"Accueil",nav_products:"Produits",nav_track:"Suivi",nav_contact:"Contact",
+        hero_title:"RAHIM STORE — Le luxe bleu",hero_sub:"Produits sélectionnés, livraison rapide partout en Algérie, paiement à la livraison.",hero_btn:"Découvrir",
+        products_title:"Notre collection",products_sub:"Choisissez un produit et remplissez le formulaire",loading_products:"⏳ Chargement...",
+        about_title:"À propos",about_text:"RAHIM STORE, une marque algérienne proposant des produits raffinés à prix abordables, avec livraison fiable partout.",
+        contact_title:"Contact",contact_location:"Algérie",
+        track_title:"Suivre ma commande",track_sub:"Entrez votre numéro de commande",track_placeholder:"RS-123456",track_btn:"🔍 Rechercher",
+        footer_rights:"Tous droits réservés",footer_made:"Fait avec amour en Algérie 🇩🇿",
+        order_title:"Finalisez votre commande",f_name:"Nom complet *",f_phone:"Téléphone *",f_wilaya:"Wilaya *",f_wilaya_choose:"Choisir wilaya",
+        f_commune:"Commune *",f_commune_choose:"Choisir commune",f_address:"Adresse *",f_qty:"Quantité *",f_image:"Photo du produit",
+        f_logo:"Logo de la boutique",
+        tap_to_upload:"Appuyez pour choisir une photo",
+        tap_to_upload_logo:"Appuyez pour choisir le logo",
+        cod_only:"💵 Paiement à la livraison uniquement",
+        submit_order:"✅ Confirmer",
+        success_title:"Commande reçue!",success_sub:"Nous vous appellerons bientôt",success_keep:"Gardez le numéro",
+        btn_wa:"📱 WhatsApp",btn_track:"🔍 Suivre",
+        buy_now:"Commander",
+        order_not_found:"❌ Commande introuvable",order_not_found_sub:"Vérifiez le numéro ou contactez-nous.",
+        order_id_label:"N°:",name_label:"Nom:",phone_label:"Tél:",wilaya_label:"Wilaya:",commune_label:"Commune:",payment_label:"Paiement:",items_label:"Articles:",total_label_short:"Total:",
+        admin_login:"Connexion Admin",admin_password:"Mot de passe",admin_enter:"Entrer",admin_wrong:"❌ Mot de passe incorrect",
+        admin_title:"Administration",admin_tab_products:"Produits",admin_tab_orders:"Commandes",admin_tab_settings:"Paramètres",
+        admin_add_product:"➕ Ajouter un produit",admin_save:"💾 Enregistrer",admin_cancel:"Annuler",admin_close:"Fermer",
+        admin_save_logo:"💾 Enregistrer le logo",admin_remove_logo:"🗑️ Supprimer le logo",
+        admin_no_products:"Aucun produit — ajoutez le premier",admin_no_orders:"Aucune commande",
+        admin_edit:"Modifier",admin_del:"Suppr",admin_confirm_del:"Confirmer?",
+        product_added:"✅ Produit ajouté",product_updated:"✅ Mis à jour",product_deleted:"🗑️ Supprimé",
+        logo_saved:"✅ Logo enregistré",logo_removed:"🗑️ Logo supprimé",
+        subtotal_label:"Sous-total:",shipping_label:"Livraison:",shipping_free:"Gratuit 🎉",total_label:"Total:",
+        loading_upload:"⏳ Téléversement...",upload_failed:"❌ Échec du téléversement",
+        willaya_required:"⚠️ Choisissez wilaya et commune",
+        out_of_stock:"Rupture de stock"
+      }
+    };
+
+    let currentLang = localStorage.getItem("rahim_lang") || "ar";
+    function t(k){ return (I18N[currentLang] && I18N[currentLang][k]) || k; }
+    function applyLang(){
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = currentLang === "ar" ? "rtl" : "ltr";
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const k = el.getAttribute("data-i18n"); if(k) el.textContent = t(k);
+      });
+      document.querySelectorAll("[data-i18n-ph]").forEach(el => {
+        const k = el.getAttribute("data-i18n-ph"); if(k) el.placeholder = t(k);
+      });
+      document.getElementById("langBtn").textContent = currentLang === "ar" ? "FR" : "ع";
+      renderProducts(); renderAdminProducts(); renderAdminOrders();
+      if(document.getElementById("orderPanel").classList.contains("open")) renderOrderSummary();
+    }
+    function toggleLang(){
+      currentLang = currentLang === "ar" ? "fr" : "ar";
+      localStorage.setItem("rahim_lang", currentLang);
+      applyLang();
+    }
+
+    /* ================= الولايات والبلديات ================= */
+    const WILAYAS_DATA = {
+      "01 - أدرار": ["أدرار","تسابيت","تامست","رقان","إبليس","بوكادي","طارفت","أولاد سعيد","أولاد عيسى","شروين","أوقروت","أولاد أحمد تيمي","فنوغيل","تيلولين","بوردج","المأمون","سبع","زاوية كنتة","أولاد أحمد","العوينة","تيمي","إن زغار","قصر باجي مختار","أنفوس","بدبدو"],
+      "02 - الشلف": ["الشلف","تنس","بوقادير","المرسى","بني حواء","واد اِسلي","جباحية","أبو الحسن","الزبوجة","الظهرة","الكريمية","الشطية","سنجاس","واد ارهيو","بنايرية","العنابة","بوعقبة","أولاد بن عبد القادر","عين مران","بني راشد","السواوانية","سيدي عكاشة","براكية","أولاد فارس","المرجة"],
+      "03 - الأغواط": ["الأغواط","قصر الحيران","أفلو","عين مدور","الحويطة","سيدي بوخلال","تاجموت","الحاج بوعزة","تاويالة","البيضاء","سبقاق","بن ناصر بن شهرة","بوعكاس","واد مرة","الغيشة","الخنق","بريدة"],
+      "04 - أم البواقي": ["أم البواقي","عين البيضاء","عين فكرون","عين المليلة","سوق نعمان","فكرينة","أم الجواز","مسكيانة","عين الزيتون","عين بابوش","الضلعة","بريش","هنشير تومغاني","بئر الشهداء","أولاد حملة","وادي قريش","سيدي أرغيس","البحير","بوغرارة السعودي"],
+      "05 - باتنة": ["باتنة","بريكة","آريس","مروانة","عين جاسر","التليلات","الشمرة","سيقوس","تازولت","نقاوس","سفيان","تيلاطو","منعة","غسير","إشمول","تيغانمين","وادي الماء","الجزار","عزيل عبد القادر","بومقر","رأس العيون","أولاد سلام","القصبات","تيمقاد","عين ياقوت","بولهيلات","بيطام","خيبر","سريانة","واد الشعبة","المعذر","سيدي عقبة"],
+      "06 - بجاية": ["بجاية","أوقاس","أقبو","إغيل علي","سيدي عيش","اميزور","البرج","تازمالت","أكيور","صدوق","تسمشت","ملبو","القصر","بوخليفة","تيشي","وديا","تيمزريت","شلاطة","أيت رزين","إيغيل عزي","فرعون","تازماريت","بني معوش","سيدي عياد"],
+      "07 - بسكرة": ["بسكرة","سيدي عقبة","طولقة","أورلال","القنطرة","الحجيرة","مشونش","ليشانة","البرانيس","فوغالة","البسباس","عين زعباطة","الحاجب","المزيرعة","بن عزوز"],
+      "08 - بشار": ["بشار","العبادلة","بني عباس","تيمودي","القنادسة","تاغيت","لحمر","بوكايس","العريشة","بني ونيف","موغل","تامترت"],
+      "09 - البليدة": ["البليدة","بوفاريك","الأربعاء","العطف","الشريعة","موزاية","مفتاح","بني تامو","الصومعة","حمام الرماني","جبابرة","قرواو","وادي العلايق","بوغرارة"],
+      "10 - البويرة": ["البويرة","الأخضرية","سور الغزلان","عين الديس","بشلول","امشدالة","العجال","بريج","عين الترك","عمر","تاغزوت","حانوت","جباحية","وادي البردي","سيدي عيسى"],
+      "11 - تمنراست": ["تمنراست","أبالسة","إدلس","تاظروك"],
+      "12 - تبسة": ["تبسة","الشريعة","بئر العاتر","العوينات","الماء الأبيض","بكارية","بئر الذهب","مرسط","الحمامات","فركان","ونزة","العقلة","استيل","صفصاف الوسرى","بولحاف الدير","قريقر","عين الزرقاء"],
+      "13 - تلمسان": ["تلمسان","مغنية","صبدة","الغزوات","سبدو","منصورة","بني بوسعيد","هنين","البسباس","بوحلو","السواني","مرسى بن مهيدي","شتوان","ترمسن","عين فزة","الحصينية","العريشة","بني بهدل","عين غرابة","سيدي العبدلي","بوخنيفية","الحناية","أولاد ميمون","عين نحالة","بني مستور","الرمشي","عين تالوت","بني سنوس","سيدي الجيلاني","عين الحجر","السواحلي","دار يغمراسن","فشتالة","بني صبيل","صباط"],
+      "14 - تيارت": ["تيارت","فرندة","قصر الشلالة","السوقر","مهية","حمادية","عين كرمس","مدريسة","توسنينة","سرغين","سبت","عين دز","سيدي عبد الرحمن","ملاك","تيرني","الرشايقة","مجاجة","عين الذهب","فشية","سيدي بختي","الرحوية","الدحموني","بوغرة","سيدي الحواس","شلالة العذاورة","واد ليلي"],
+      "15 - تيزي وزو": ["تيزي وزو","عزازقة","ذراع الميزان","أزفون","مكيرة","الأربعاء نايث إيراثن","بوزقغن","عين الحمام","تيقزيرت","واقورن","أغريب","إفرحونن","بوغني","ذراع بن خدة","معاتقة","تيزي راشد","إيلولن أومالو","آيت يحيى","آيت مهدي","مسوحفة","إمسوحال","إيفرحونن","تيميصارت","آيت خليلي","سويداني بوجمعة","سي مصطفى","بني يني","ماكودة","تادميت","تيز غزت","إيبودرارن","فريحة","عين الزاوية","تيزي غنيف"],
+      "16 - الجزائر": ["الجزائر العاصمة","باب الوادي","الحراش","حسين داي","الرويبة","زرالدة","بئر مراد رايس","سيدي امحمد","الشراقة","بوزريعة","الدار البيضاء","براقي","الأبيار","بن عكنون","دالي إبراهيم","برج البحري","عين البنيان","بئر خادم","القصبة","رغاية","جسر قسنطينة","الحمامات","المحمدية","باش جراح","المدنية","حيدرة","أولاد فايت","العاشور","السويدانية","بابا حسن","درارية","تسالة المرجة","اولاد الشبل","خرايسية","سطاوالي","الكاليتوس","هراوة","المرسى","عين طايا","بني مسوس"],
+      "17 - الجلفة": ["الجلفة","عين وسارة","مسعد","حاسي بحبح","دار الشيوخ","البيرين","الإدريسية","حد الصحاري","سيدي بايزيد","زعفران","تعزلت","عين الإبل","فيض البطمة","بويرة الأحداب","عين معبد","المجبارة","حاسي العش","سيدي مكيد","زكار","الدويس","الشويحة","بن يعقوب","بنهار","قطارة"],
+      "18 - جيجل": ["جيجل","الميلية","العوانة","الطاهير","السطاحة","الجمعة بني حبيبي","زيامة منصورية","الشقفة","برج الطهر","الشحنة","الأمير عبد القادر","قاوس","العنصر","جيملة","بودريا","وجانة","سيدي عبد العزيز"],
+      "19 - سطيف": ["سطيف","العلمة","بوقاعة","عين الكبيرة","الحمايت","بني ورثيلان","عين أرنات","بئر العبد","عموشة","التلة","بني عزيز","قلال","جميلة","أولاد صابر","عين أزال","بيضاء برج","عين الحجر","ماوكلان","بوعنداس","تيزي نبشار","الدهامشة","واد البارد","بني فودة","بازر سكرة","سلاطنة","مزلوق","وادي العبس","بئر حدادة","قنزات","بني محلي"],
+      "20 - سعيدة": ["سعيدة","الحساسنة","عين الحجر","أولاد براهم","يوب","سيدي أحمد","سيدي بوبكر","مولاي العربي","عين السلوقي","دوي ثابت"],
+      "21 - سكيكدة": ["سكيكدة","عزابة","القل","تمالوس","رمضان جمال","بن عزوز","الحدائق","عين شرشار","أم الطوب","فلفلة","السبت","بني زيد","الشرايع","الزيتونة","الكركرة","جندل"],
+      "22 - سيدي بلعباس": ["سيدي بلعباس","تلاغ","سفيزف","بن باديس","عين البرد","مرحوم","رأس الماء","سيدي لحسن","عين تندمين","مصطفى بن براهيم","سيدي علي بن يوب","عين الثريد","تنيرة","سيدي حمادوش","عين أدن","طابية","لمطار","بوجبهة البرج","حاسي زهانة","وادي السبع","زيغور"],
+      "23 - عنابة": ["عنابة","الحجار","البوني","سيدي عمار","برحال","عين الباردة","شطايبي","التريعات","سرايدي","وادي العنب","الشرفة"],
+      "24 - قالمة": ["قالمة","وادي الزناتي","حمام النبائل","بوشقوف","هيليوبوليس","عين مخلوف","حمام دباغ","جودة","خزارة","قلعة بوصبع","بومهرة أحمد","عين العربي","بن جراح","الركنية","سلاوة عنونة"],
+      "25 - قسنطينة": ["قسنطينة","الخروب","حامة بوزيان","ديدوش مراد","عين اسمارة","زيغود يوسف","ابن زياد","ابن باديس","أولاد رحمون"],
+      "26 - المدية": ["المدية","برواقية","قصر البخاري","تابلاط","العمارية","وزرة","سيدي نعمان","الشهبونية","عين بوسيف","بني سليمان","العيساوية","الحوضان","أولاد امعرف","ميهوب","الربيع","تمزقيدة","سدراية","بوعيشون"],
+      "27 - مستغانم": ["مستغانم","عين النويصي","حاسي مماش","بوقيراط","خير الدين","سيدي علي","عين تادلس","حجاج","منصورة","عشعاشة","سيدي لخضر","مزغران","عين سيدي الشريف","الصور","الطواهرية","سوافلية"],
+      "28 - المسيلة": ["المسيلة","بوسعادة","سيدي عيسى","عين الملح","مقرة","حمام الضلعة","أولاد دراج","المعاضيد","جبل مساعد","شلالة العذاورة","برهوم","مسيف","خبانة","بن سرور","عين فارس","الهامل","تامسة","المعاريف"],
+      "29 - معسكر": ["معسكر","سيق","محمدية","تيغنيف","غريس","بوحنيفية","عين فارس","زهانة","عقاز","عين فراح","وادي الأبطال","سيدي عبد الجبار","البرج","عوف","بنيان","قرجوم"],
+      "30 - ورقلة": ["ورقلة","حاسي مسعود","الرويسات","انقوسة","سيدي خويلد","العقلة","الحجيرة","البرمة","حاسي بن عبد الله","نقوسة"],
+      "31 - وهران": ["وهران","أرزيو","بئر الجير","السانية","بوتليليس","عين الترك","مسرغين","سيدي الشحمي","حاسي بونيف","حاسي مفسوخ","بطيوة","مرسى الحجاج","قديل","بن فريحة","البركي","بئر الذهب","طافراوي","العنصر","سيدي بن يوب"],
+      "32 - البيض": ["البيض","الأبيض سيدي الشيخ","بريزينة","بوعلام","الرقاصة","البنود","كاف لحمر","شيخة","الشلالة","الغاسول","بوقطب"],
+      "33 - إليزي": ["إليزي","برج عمر إدريس","دبداب","جانت"],
+      "34 - برج بوعريريج": ["برج بوعريريج","رأس الوادي","برج زمورة","مجانة","البرج الغربي","الحمادية","العنصر","تقلعيت","بن داود","جعافرة","تسامرت","عين تسرة","بولعراف","العش","برج الغدير","المنصورة","حرازة","خليل","الزمورة","بئر قاصد علي"],
+      "35 - بومرداس": ["بومرداس","الثنية","دلس","برج منايل","الناظور","بودواو","قورصو","حمادي","تيجلابين","بغلية","سيدي داود","شعبة العامر","أعفور","ناصريّة","لجناح","قرطوفة","بن عزوز","سيدي مهدي","بني عمران"],
+      "36 - الطارف": ["الطارف","القالة","الذرعان","بوحجار","بن مهيدي","العيون","الشافية","بسباس","الزيتونة","عين العسل","ريغان","الحجار","الشحانية"],
+      "37 - تندوف": ["تندوف","أم العسل"],
+      "38 - تيسمسيلت": ["تيسمسيلت","ثنية الأحد","لرجام","الراجع","برج بونعامة","بوزغاية","بني شعيب","خميستي","العيون","سيدي العابد","الأرجم","لازارية","وادي الفضة","سيدي بوتشنت"],
+      "39 - الوادي": ["الوادي","الدبيلة","روباح","قمار","البياضة","حاسي خليفة","كوينين","تغزوت","النعيمة","أم الطيور","الطريفاوي","الرغبوبة","سيدي عون","امهية"],
+      "40 - خنشلة": ["خنشلة","قايس","ششار","بوحمامة","انسيغة","بابار","المحمل","بغاي","طامزة","جلال","عين الطويلة","متوسة","يابوس","ريش","مسارة"],
+      "41 - سوق أهراس": ["سوق أهراس","سيدي فرج","تاورة","مداوروش","الحدادة","الخضرة","ترقاشت","الزعرورية","سيدي عبد الباقي","المشروحة","عين زانة","وادي الكبريت","أولاد إدريس","أولاد مومن","سيدي إبراهيم","جمعة هلالة"],
+      "42 - تيبازة": ["تيبازة","شرشال","القليعة","حطاطبة","فوة","الداموس","بوهارون","بوإسماعيل","الناظور","حجوط","عين تقورايت","سيدي سميان","مراد","سيدي غيلاس","الأرهاط","مسلمون","بني ميلك"],
+      "43 - ميلة": ["ميلة","فرجيوة","شلغوم العيد","تاجنانت","ترعي باينان","ساريف","القرارح","بئر العبو","المشيرة","سيدي خليفة","وادي العطية","تسدان حدادة","أحمد راشدي","عين الملوك","تيبركانين","وادي البقر","بن يحيى عبد الرحمن","وادي النجاء","بوحامة","عين التقي"],
+      "44 - عين الدفلى": ["عين الدفلى","خميس مليانة","العطاف","مليانة","العبادية","بوممدفع","وادي الشرفاء","جليدة","الروينا","عين البنيان","تيبركانين","الحسنية","برج الأمير خالد","بير أحمد","طارق بن زياد","وادي جمعة","بوعيشون","سيدي لخضر","عريب"],
+      "45 - النعامة": ["النعامة","مبطوح","عين الصفراء","مزارية","مغرار","البيوض","عسلة","صفيصيفة","مشرية"],
+      "46 - عين تموشنت": ["عين تموشنت","بني صاف","الحساسنة","العامرية","حمام بوحجر","المالح","ولهاصة","شعبة اللحم","تارقة","سيدي بن عدة","سيدي بوجمعة","ولاد بوجمعة","الأغلال","عين الكيحل","تامزوغة","العمارة","باب العساس"],
+      "47 - غرداية": ["غرداية","متليلة","القرارة","بريان","زلفانة","المنصورة","حاسي الفحل","بن نورة"],
+      "48 - غليزان": ["غليزان","واد رهيو","مازونة","يقل","منداس","زمورة","واد اِسلي","سيدي امحمد بن علي","عمي موسى","سيدي سعادة","سيدي خطابي","بني زنطيس","سيدي امحمدة","دار بن عبد الله","بني هلول","الحاسي","ولاد يعيش","وادي الخير"],
+      "49 - تيميمون": ["تيميمون","أوقروت","شروين","أولاد عيسى","طارق بن زياد","أولاد سعيد"],
+      "50 - برج باجي مختار": ["برج باجي مختار","تيمياوين"],
+      "51 - أولاد جلال": ["أولاد جلال","سيدي خالد","البسباس","راس الميعاد","الدوسن"],
+      "52 - بني عباس": ["بني عباس","التواتة","قصابي","الوبرة","تامترت","أوقروت"],
+      "53 - إن صالح": ["إن صالح","فقارة الزوى","حاسي باهبو"],
+      "54 - إن قزام": ["إن قزام","تين زاواتين"],
+      "55 - تقرت": ["تقرت","الطيبات","الحجيرة","المنقار","تماسين","سيدي سليمان"],
+      "56 - جانت": ["جانت","برج الحواس"],
+      "57 - المغير": ["المغير","جامعة","سيدي عمران","أم الطيور","سيدي خليل"],
+      "58 - المنيعة": ["المنيعة","حاسي القارة","حاسي الفحل"],
+      "59 - أفلو": ["أفلو","سيدي بوزيد","واد مرة","سباق","البيضاء","تاويالة","الحاج بوعزة","تاجموت","بن ناصر بن شهرة"],
+      "60 - بريكة": ["بريكة","بيطام","مقرة","عزيل عبد القادر","الجزار","أولاد سي أحمد"],
+      "61 - القنطرة": ["القنطرة","عين زعباطة","الحطابة","سيدي عقبة","بن عزوز"],
+      "62 - بئر العاتر": ["بئر العاتر","صفصاف الوسرى","فركان","عقلة قاستيل"],
+      "63 - العريشة": ["العريشة","مرسى بن مهيدي"],
+      "64 - قصر الشلالة": ["قصر الشلالة","سرغين","زمالة الأمير عبد القادر","وادي اِسلي"],
+      "65 - عين وسارة": ["عين وسارة","بير صفا","بويرة الأحداب","حاسي بحبح","بنهار"],
+      "66 - مسعد": ["مسعد","قطارة","دلدول","سيدي بايزيد","أم العضام","مجبارة"],
+      "67 - قصر البخاري": ["قصر البخاري","بوغار","مفتاح","الشهبونية","سانوس","المجبارة"],
+      "68 - بوسعادة": ["بوسعادة","الهامل","تامسة","المعاريف","وادي الشعلة","ولاد سيدي إبراهيم"],
+      "69 - الأبيض سيدي الشيخ": ["الأبيض سيدي الشيخ","البنود","الحجيرة","شيخة","بوعلام"]
+    };
+
+    /* ================= Supabase ================= */
+    let sb = null;
+    try { sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e){ console.error(e); }
+
+    /* ================= الحالة ================= */
+    let PRODUCTS = [];
+    let ORDERS = [];
+    let COUPONS = [];
+    let lastOrder = null;
+    let currentProduct = null;
+    let editingProductId = null;
+    let uploadedImageUrl = null;
+    let currentLogoUrl = null;
+    let pendingLogoFile = null;
+    let appliedCoupon = null;
+    let currentCategory = "all";
+    let searchQuery = "";
+    let wishlist = JSON.parse(localStorage.getItem("rahim_wishlist") || "[]");
+
+    /* ================= اللوغو ================= */
+    async function loadLogo(){
+      try{
+        const { data } = await sb.from("settings").select("value").eq("key", "logo_url").maybeSingle();
+        const url = data && data.value ? data.value : "";
+        applyLogo(url);
+      }catch(e){ console.error("loadLogo error:", e); }
+    }
+    function applyLogo(url){
+      currentLogoUrl = url || null;
+      const imgs = ["headerLogo","heroLogo","footerLogo"].map(id => document.getElementById(id));
+      if(url){
+        imgs.forEach(img => { img.src = url; img.classList.add("show"); });
+        const fav = document.getElementById("faviconLink");
+        if(fav) fav.href = url;
+      } else {
+        imgs.forEach(img => { img.src = ""; img.classList.remove("show"); });
+      }
+    }
+    function previewLogo(e){
+      const file = e.target.files[0]; if(!file) return;
+      pendingLogoFile = file;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const preview = document.getElementById("logoPickerPreview");
+        preview.src = ev.target.result; preview.classList.add("show");
+      };
+      reader.readAsDataURL(file);
+    }
+    async function saveLogo(){
+      if(!pendingLogoFile){
+        if(!currentLogoUrl){ showToast("⚠️ اختر صورة أولاً", "error"); return; }
+        showToast(t("logo_saved"), "success"); return;
+      }
+      const btn = document.getElementById("logoSaveBtn");
+      btn.disabled = true; btn.textContent = t("loading_upload");
+      try{
+        const url = await uploadImage(pendingLogoFile);
+        await sb.from("settings").upsert({ key:"logo_url", value:url, updated_at:new Date().toISOString() });
+        applyLogo(url);
+        pendingLogoFile = null;
+        document.getElementById("logoInput").value = "";
+        showToast(t("logo_saved"), "success");
+      }catch(e){ showToast(t("upload_failed"), "error"); }
+      finally{ btn.disabled = false; btn.textContent = t("admin_save_logo"); }
+    }
+    async function removeLogo(){
+      if(!confirm(t("admin_confirm_del"))) return;
+      try{
+        await sb.from("settings").upsert({ key:"logo_url", value:"", updated_at:new Date().toISOString() });
+        applyLogo("");
+        document.getElementById("logoPickerPreview").classList.remove("show");
+        showToast(t("logo_removed"), "success");
+      }catch(e){ showToast("❌ " + e.message, "error"); }
+    }
+
+    /* ================= المنتجات ================= */
+    async function loadProducts(){
+      const grid = document.getElementById("productsGrid");
+      grid.innerHTML = `<div class="loading">${t("loading_products")}</div>`;
+      try{
+        const { data, error } = await sb.from("products").select("*").eq("active", true).order("id", {ascending:false});
+        if(error) throw error;
+        PRODUCTS = data || [];
+        renderFilters();
+        renderProducts();
+      }catch(err){
+        grid.innerHTML = `<div class="loading" style="color:#e74c3c;">❌ ${err.message}</div>`;
+      }
+    }
+
+    function renderFilters(){
+      const box = document.getElementById("filtersBox");
+      const cats = ["all", ...new Set(PRODUCTS.map(p => p.category || "عام"))];
+      box.innerHTML = cats.map(c => 
+        `<button class="filter-btn ${c === currentCategory ? 'active' : ''}" onclick="setCategory('${c}', this)">${c === 'all' ? 'الكل' : c}</button>`
+      ).join("");
+    }
+
+    function setCategory(cat, el){
+      currentCategory = cat;
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      el.classList.add("active");
+      renderProducts();
+    }
+
+    function filterProducts(){
+      searchQuery = document.getElementById("searchInput").value.toLowerCase().trim();
+      renderProducts();
+    }
+
+    function renderProducts(){
+      const grid = document.getElementById("productsGrid");
+      if(!grid) return;
+      
+      let filtered = PRODUCTS.filter(p => {
+        const matchCat = currentCategory === "all" || p.category === currentCategory;
+        const matchSearch = !searchQuery || p.name.toLowerCase().includes(searchQuery);
+        return matchCat && matchSearch;
+      });
+
+      // المنتجات المميزة أولاً
+      filtered.sort((a,b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+
+      if(!filtered.length){
+        grid.innerHTML = `<div class="loading">🛍️ ${t("admin_no_products")}</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(p => {
+        const img = p.image_url ? `<img src="${p.image_url}" alt="${p.name}">` : (p.emoji || "📦");
+        const hasDiscount = p.old_price && p.old_price > p.price;
+        const discountPercent = hasDiscount ? Math.round((1 - p.price/p.old_price) * 100) : 0;
+        const outOfStock = p.stock !== null && p.stock <= 0;
+        const isWished = wishlist.includes(p.id);
+        
+        return `
+        <div class="card">
+          ${hasDiscount ? `<div class="discount-tag">-${discountPercent}%</div>` : ''}
+          ${p.featured ? `<div class="featured-tag">⭐ مميز</div>` : ''}
+          <div class="card-img">
+            ${img}
+            ${outOfStock ? `<div class="out-of-stock">${t("out_of_stock")}</div>` : ''}
+          </div>
+          <div class="card-body">
+            <div class="card-category">📁 ${p.category || "عام"}</div>
+            <div class="card-title">${p.name}</div>
+            <div class="rating">⭐ ${Number(p.rating || 5).toFixed(1)} ${p.sold > 0 ? `• بيع ${p.sold}` : ''}</div>
+            <div class="price-row">
+              <div class="card-price">${Number(p.price).toLocaleString()} <small>DZD</small></div>
+              ${hasDiscount ? `<div class="old-price">${Number(p.old_price).toLocaleString()}</div>` : ''}
+            </div>
+            ${p.stock !== null && p.stock > 0 && p.stock <= 5 ? `<div class="stock-warning">⚠️ بقي ${p.stock} فقط!</div>` : ''}
+            <button class="add-btn" onclick="openOrderForm(${p.id})" ${outOfStock ? 'disabled' : ''}>
+              ${outOfStock ? t("out_of_stock") : t("buy_now")}
+            </button>
+            <button class="btn-sm" onclick="toggleWishlist(${p.id})" style="background:${isWished ? 'var(--danger)' : 'var(--black-3)'};color:#fff;margin-top:6px;">
+              ${isWished ? '❤️ في المفضلة' : '🤍 أضف للمفضلة'}
+            </button>
+          </div>
+        </div>`;
+      }).join("");
+    }
+
+    /* ================= المفضلة ================= */
+    function toggleWishlist(id){
+      const idx = wishlist.indexOf(id);
+      if(idx > -1) wishlist.splice(idx, 1);
+      else wishlist.push(id);
+      localStorage.setItem("rahim_wishlist", JSON.stringify(wishlist));
+      updateWishlistBadge();
+      renderProducts();
+      showToast(idx > -1 ? "تم الحذف من المفضلة" : "تمت الإضافة للمفضلة ❤️", "success");
+    }
+    function updateWishlistBadge(){
+      const badge = document.getElementById("wishlistBadge");
+      if(wishlist.length > 0){
+        badge.textContent = wishlist.length;
+        badge.style.display = "block";
+      } else badge.style.display = "none";
+    }
+    function openWishlist(){
+      const box = document.getElementById("wishlistContent");
+      if(!wishlist.length){
+        box.innerHTML = `<p style="text-align:center;color:var(--gray);">المفضلة فارغة</p>`;
+      } else {
+        box.innerHTML = wishlist.map(id => {
+          const p = PRODUCTS.find(x => x.id === id);
+          if(!p) return "";
+          const img = p.image_url ? `<img src="${p.image_url}" style="width:50px;height:50px;object-fit:cover;border-radius:8px;">` : (p.emoji || "📦");
+          return `
+          <div class="admin-product">
+            <div class="pinfo">
+              <div class="pthumb">${img}</div>
+              <div><h4>${p.name}</h4><span>${Number(p.price).toLocaleString()} DZD</span></div>
+            </div>
+            <button class="btn-sm btn-del" onclick="toggleWishlist(${p.id});openWishlist();">حذف</button>
+          </div>`;
+        }).join("");
+      }
+      closeAll();
+      document.getElementById("overlay").classList.add("open");
+      document.getElementById("wishlistPanel").classList.add("open");
+    }
+
+    /* ================= فتح نموذج الطلب ================= */
+    function openOrderForm(id){
+      const p = PRODUCTS.find(x => x.id === id);
+      if(!p) return;
+      currentProduct = p;
+      appliedCoupon = null;
+      document.getElementById("couponInput").value = "";
+      const img = p.image_url ? `<img src="${p.image_url}" style="width:120px;height:120px;object-fit:cover;border-radius:14px;margin:auto;border:2px solid var(--blue);">` : `<div style="font-size:3.5rem;">${p.emoji||"📦"}</div>`;
+      document.getElementById("orderProductPreview").innerHTML = `
+        ${img}
+        <h4 style="margin-top:10px;color:#eef3fb;">${p.name}</h4>
+        <div style="color:var(--blue-light);font-weight:900;font-size:1.3rem;">${Number(p.price).toLocaleString()} DZD</div>
+      `;
+      document.getElementById("cQty").value = 1;
+      renderOrderSummary();
+      closeAll();
+      document.getElementById("overlay").classList.add("open");
+      document.getElementById("orderPanel").classList.add("open");
+    }
+
+    /* ================= الولايات والبلديات ================= */
+    function fillWilayas(){
+      const select = document.getElementById("cWilaya");
+      select.innerHTML = `<option value="">${t("f_wilaya_choose")}</option>`;
+      Object.keys(WILAYAS_DATA).forEach(w => {
+        const opt = document.createElement("option");
+        opt.value = w; opt.textContent = w;
+        select.appendChild(opt);
+      });
+    }
+    function onWilayaChange(){
+      const wilaya = document.getElementById("cWilaya").value;
+      const communeField = document.getElementById("communeField");
+      const communeSelect = document.getElementById("cCommune");
+      if(!wilaya){ communeField.style.display = "none"; renderOrderSummary(); return; }
+      communeSelect.innerHTML = `<option value="">${t("f_commune_choose")}</option>`;
+      (WILAYAS_DATA[wilaya] || []).forEach(c => {
+        const opt = document.createElement("option");
+        opt.value = c; opt.textContent = c;
+        communeSelect.appendChild(opt);
+      });
+      communeField.style.display = "block";
+      renderOrderSummary();
+    }
+
+    /* ================= كوبونات الخصم ================= */
+    async function applyCoupon(){
+      const code = document.getElementById("couponInput").value.trim().toUpperCase();
+      if(!code){ showToast("⚠️ أدخل الكود", "error"); return; }
+      try{
+        const { data } = await sb.from("coupons").select("*").eq("code", code).eq("active", true).maybeSingle();
+        if(!data){ showToast("❌ كود غير صالح", "error"); appliedCoupon = null; renderOrderSummary(); return; }
+        if(data.expires_at && new Date(data.expires_at) < new Date()){ showToast("❌ انتهت صلاحية الكود", "error"); appliedCoupon = null; renderOrderSummary(); return; }
+        if(data.uses >= data.max_uses){ showToast("❌ استُنفد الكود", "error"); appliedCoupon = null; renderOrderSummary(); return; }
+        appliedCoupon = data;
+        showToast(`✅ تم تطبيق خصم ${data.discount_percent}%`, "success");
+        renderOrderSummary();
+      }catch(e){ showToast("❌ خطأ في الكود", "error"); }
+    }
+
+    /* ================= ملخص الطلب ================= */
+    function calcTotals(){
+      if(!currentProduct) return { subtotal:0, shipping:0, total:0, discount:0 };
+      const qty = Number(document.getElementById("cQty").value) || 1;
+      const subtotal = currentProduct.price * qty;
+      let discount = 0;
+      if(appliedCoupon && subtotal >= (appliedCoupon.min_order || 0)){
+        discount = Math.round(subtotal * appliedCoupon.discount_percent / 100);
+      }
+      const afterDiscount = subtotal - discount;
+      const shipping = afterDiscount >= 10000 ? 0 : 500;
+      return { subtotal, discount, shipping, total: afterDiscount + shipping, qty };
+    }
+    function renderOrderSummary(){
+      if(!currentProduct) return;
+      const { subtotal, discount, shipping, total, qty } = calcTotals();
+      document.getElementById("orderSummary").innerHTML = `
+        <div class="row"><span>${currentProduct.name} × ${qty}</span><span>${subtotal.toLocaleString()} DZD</span></div>
+        ${discount > 0 ? `<div class="row discount"><span>🎁 خصم (${appliedCoupon.code})</span><span>-${discount.toLocaleString()} DZD</span></div>` : ''}
+        <div class="row"><span>${t("shipping_label")}</span><span>${shipping === 0 ? t("shipping_free") : shipping + " DZD"}</span></div>
+        <div class="row total"><span>${t("total_label")}</span><span>${total.toLocaleString()} DZD</span></div>
+      `;
+    }
+
+    /* ================= إرسال الطلب ================= */
+    async function submitOrder(e){
+      e.preventDefault();
+      const btn = document.getElementById("submitBtn");
+      btn.disabled = true; btn.textContent = "⏳...";
+
+      const name = document.getElementById("cName").value.trim();
+      const phone = document.getElementById("cPhone").value.trim();
+      const wilaya = document.getElementById("cWilaya").value;
+      const commune = document.getElementById("cCommune").value;
+      const address = document.getElementById("cAddress").value.trim();
+      const qty = Number(document.getElementById("cQty").value) || 1;
+
+      if(!wilaya || !commune){
+        showToast(t("willaya_required"), "error");
+        btn.disabled = false; btn.textContent = t("submit_order");
+        return;
+      }
+
+      const { subtotal, discount, shipping, total } = calcTotals();
+      const orderId = "RS-" + Date.now().toString().slice(-6);
+
+      const order = {
+        id: orderId,
+        customer: { name, phone, wilaya, commune, address },
+        product: { id: currentProduct.id, name: currentProduct.name, price: currentProduct.price, qty },
+        subtotal, discount, shipping, total,
+        coupon_code: appliedCoupon ? appliedCoupon.code : null,
+        status: "قيد المراجعة",
+        date: new Date().toLocaleString("ar-DZ")
+      };
+
+      try{
+        await sb.from("orders").insert({
+          id: orderId, customer_name: name, customer_phone: phone,
+          wilaya, commune, address,
+          payment_method: "COD",
+          items: [order.product],
+          subtotal, discount, shipping, total,
+          coupon_code: order.coupon_code,
+          status: "قيد المراجعة"
+        });
+
+        // تحديث عداد الكوبون
+        if(appliedCoupon){
+          await sb.from("coupons").update({ uses: (appliedCoupon.uses || 0) + 1 }).eq("code", appliedCoupon.code);
+        }
+
+        // تحديث مبيعات ومخزون المنتج
+        const newSold = (currentProduct.sold || 0) + qty;
+        const newStock = currentProduct.stock !== null ? currentProduct.stock - qty : null;
+        await sb.from("products").update({ sold: newSold, stock: newStock }).eq("id", currentProduct.id);
+      }catch(err){ console.error(err); }
+
+      const orders = JSON.parse(localStorage.getItem("rahim_orders") || "[]");
+      orders.push(order);
+      localStorage.setItem("rahim_orders", JSON.stringify(orders));
+
+      lastOrder = order;
+      sendToWhatsApp(order);
+
+      closeAll();
+      document.getElementById("successOrderId").textContent = orderId;
+      document.getElementById("overlay").classList.add("open");
+      document.getElementById("successPanel").classList.add("open");
+
+      document.getElementById("orderForm").reset();
+      document.getElementById("communeField").style.display = "none";
+      btn.disabled = false; btn.textContent = t("submit_order");
+      appliedCoupon = null;
+    }
+
+    /* ================= واتساب ================= */
+    function buildWhatsAppMessage(order){
+      const p = order.product;
+      let msg = `🛒 *طلب جديد — RAHIM STORE*\n━━━━━━━━━━━━━━━\n`;
+      msg += `🔖 ${order.id}\n👤 ${order.customer.name}\n📞 ${order.customer.phone}\n`;
+      msg += `📍 ${order.customer.wilaya} - ${order.customer.commune}\n🏠 ${order.customer.address}\n💳 COD\n`;
+      msg += `━━━━━━━━━━━━━━━\n📦 ${p.name} × ${p.qty} = ${(p.price*p.qty).toLocaleString()} DZD\n`;
+      if(order.discount > 0) msg += `🎁 خصم ${order.coupon_code}: -${order.discount.toLocaleString()} DZD\n`;
+      msg += `━━━━━━━━━━━━━━━\n💰 *${order.total.toLocaleString()} DZD*\n🕒 ${order.date}`;
+      return msg;
+    }
+    function sendToWhatsApp(order){
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWhatsAppMessage(order))}`;
+      window.open(url, "_blank");
+    }
+    function sendWhatsAppAgain(){ if(lastOrder) sendToWhatsApp(lastOrder); }
+
+    /* ================= التنقل ================= */
+    function showTrack(){
+      document.getElementById("homeView").style.display = "none";
+      document.getElementById("trackView").style.display = "block";
+      window.scrollTo(0,0);
+    }
+    function showHome(){
+      document.getElementById("homeView").style.display = "block";
+      document.getElementById("trackView").style.display = "none";
+      window.scrollTo(0,0);
+    }
+
+    /* ================= تتبع ================= */
+    async function trackOrder(){
+      const input = document.getElementById("trackInput").value.trim().toUpperCase();
+      const result = document.getElementById("trackResult");
+      if(!input) return;
+      result.classList.add("show");
+      result.innerHTML = `<p>⏳...</p>`;
+      let o = null;
+      try{
+        const { data } = await sb.from("orders").select("*").eq("id", input).maybeSingle();
+        if(data) o = data;
+      }catch(e){ console.error(e); }
+      if(!o){
+        result.innerHTML = `<div class="status notfound">${t("order_not_found")}</div>`;
+        return;
+      }
+      result.innerHTML = `
+        <div class="status">✅ ${o.status}</div>
+        <div class="line"><span>${t("order_id_label")}</span><strong>${o.id}</strong></div>
+        <div class="line"><span>${t("name_label")}</span><span>${o.customer_name}</span></div>
+        <div class="line"><span>${t("phone_label")}</span><span>${o.customer_phone}</span></div>
+        <div class="line"><span>${t("wilaya_label")}</span><span>${o.wilaya}</span></div>
+        <div class="line"><span>${t("total_label_short")}</span><strong style="color:var(--blue-light)">${Number(o.total).toLocaleString()} DZD</strong></div>
+      `;
+    }
+
+    /* ================= لوحة الأدمن ================= */
+    function openAdminLogin(){
+      closeAll();
+      document.getElementById("overlay").classList.add("open");
+      document.getElementById("adminLogin").classList.add("open");
+      document.getElementById("adminPass").value = "";
+      setTimeout(() => document.getElementById("adminPass").focus(), 150);
+    }
+    function checkAdmin(){
+      if(document.getElementById("adminPass").value === ADMIN_PASSWORD){
+        closeAll();
+        document.getElementById("overlay").classList.add("open");
+        document.getElementById("adminPanel").classList.add("open");
+        loadAdminData();
+        const preview = document.getElementById("logoPickerPreview");
+        if(currentLogoUrl){ preview.src = currentLogoUrl; preview.classList.add("show"); }
+        else preview.classList.remove("show");
+        showToast("✅ " + t("admin_title"), "success");
+      } else showToast(t("admin_wrong"), "error");
+    }
+    function switchAdminTab(tab, el){
+      document.querySelectorAll(".admin-tab").forEach(x => x.classList.remove("active"));
+      document.querySelectorAll(".admin-tab-content").forEach(x => x.classList.remove("active"));
+      el.classList.add("active");
+      document.getElementById("tab-" + tab).classList.add("active");
+    }
+
+    async function loadAdminData(){
+      try{
+        const { data } = await sb.from("products").select("*").order("id", {ascending:false});
+        PRODUCTS = data || [];
+        renderProducts(); renderAdminProducts();
+      }catch(e){ console.error(e); }
+      try{
+        const { data } = await sb.from("orders").select("*").order("created_at", {ascending:false});
+        ORDERS = data || [];
+        renderAdminOrders(); renderStats();
+      }catch(e){ console.error(e); }
+      try{
+        const { data } = await sb.from("coupons").select("*").order("created_at", {ascending:false});
+        COUPONS = data || [];
+        renderAdminCoupons();
+      }catch(e){ console.error(e); }
+      // تعبئة الفئات
+      try{
+        const { data } = await sb.from("categories").select("*");
+        const sel = document.getElementById("pCategory");
+        sel.innerHTML = (data || []).map(c => `<option value="${c.name}">${c.icon} ${c.name}</option>`).join("");
+      }catch(e){}
+    }
+
+    function renderStats(){
+      document.getElementById("statProducts").textContent = PRODUCTS.length;
+      document.getElementById("statOrders").textContent = ORDERS.length;
+      document.getElementById("statPending").textContent = ORDERS.filter(o => o.status === "قيد المراجعة").length;
+      const revenue = ORDERS.filter(o => o.status === "تم التسليم").reduce((sum, o) => sum + Number(o.total), 0);
+      document.getElementById("statRevenue").textContent = revenue.toLocaleString();
+    }
+
+    function renderAdminProducts(){
+      const box = document.getElementById("adminProductsList");
+      if(!box) return;
+      if(!PRODUCTS.length){
+        box.innerHTML = `<p style="text-align:center;color:var(--gray);">${t("admin_no_products")}</p>`;
+        return;
+      }
+      box.innerHTML = PRODUCTS.map(p => {
+        const thumb = p.image_url ? `<img src="${p.image_url}">` : (p.emoji || "📦");
+        return `
+        <div class="admin-product">
+          <div class="pinfo">
+            <div class="pthumb">${thumb}</div>
+            <div>
+              <h4>${p.name} ${p.featured ? '⭐' : ''}</h4>
+              <span>${Number(p.price).toLocaleString()} DZD • مخزون: ${p.stock}</span>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn-sm btn-feat" onclick="toggleFeatured(${p.id})">⭐</button>
+            <button class="btn-sm btn-edit" onclick="editProduct(${p.id})">${t("admin_edit")}</button>
+            <button class="btn-sm btn-del" onclick="deleteProduct(${p.id})">${t("admin_del")}</button>
+          </div>
+        </div>
+      `}).join("");
+    }
+
+    function renderAdminOrders(){
+      const box = document.getElementById("adminOrdersList");
+      if(!box) return;
+      if(!ORDERS.length){
+        box.innerHTML = `<p style="text-align:center;color:var(--gray);">${t("admin_no_orders")}</p>`;
+        return;
+      }
+      box.innerHTML = ORDERS.map(o => `
+        <div class="admin-product" style="flex-direction:column;align-items:stretch;">
+          <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;">
+            <strong style="color:var(--blue-light);">${o.id}</strong>
+            <select onchange="updateOrderStatus('${o.id}', this.value)" style="padding:6px 10px;border-radius:8px;background:var(--black);color:#eef3fb;border:1px solid var(--border);font-family:inherit;font-size:.85rem;">
+              <option value="قيد المراجعة" ${o.status==="قيد المراجعة"?"selected":""}>قيد المراجعة</option>
+              <option value="تم الشحن" ${o.status==="تم الشحن"?"selected":""}>تم الشحن</option>
+              <option value="تم التسليم" ${o.status==="تم التسليم"?"selected":""}>تم التسليم</option>
+              <option value="ملغي" ${o.status==="ملغي"?"selected":""}>ملغي</option>
+            </select>
+          </div>
+          <div style="font-size:.85rem;color:var(--gray);margin-top:8px;line-height:1.8;">
+            👤 ${o.customer_name} — 📞 ${o.customer_phone}<br>
+            📍 ${o.wilaya} — ${o.address||""}<br>
+            ${o.coupon_code ? `🎁 كوبون: ${o.coupon_code}<br>` : ''}
+            💰 <strong style="color:var(--blue-light);">${Number(o.total).toLocaleString()} DZD</strong>
+            <a href="https://wa.me/213${o.customer_phone.replace(/\D/g,'').replace(/^0/,'')}" target="_blank" style="color:#25D366;font-weight:700;margin-right:8px;">📱 واتساب الزبون</a>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderAdminCoupons(){
+      const box = document.getElementById("adminCouponsList");
+      if(!box) return;
+      if(!COUPONS.length){
+        box.innerHTML = `<p style="text-align:center;color:var(--gray);">لا توجد كوبونات</p>`;
+        return;
+      }
+      box.innerHTML = COUPONS.map(c => `
+        <div class="admin-product">
+          <div class="pinfo">
+            <div><h4>🎁 ${c.code}</h4><span>${c.discount_percent}% • استُخدم ${c.uses}/${c.max_uses}</span></div>
+          </div>
+          <button class="btn-sm btn-del" onclick="deleteCoupon('${c.code}')">حذف</button>
+        </div>
+      `).join("");
+    }
+
+    async function saveCoupon(){
+      const code = document.getElementById("cpCode").value.trim().toUpperCase();
+      const discount = Number(document.getElementById("cpDiscount").value);
+      const min = Number(document.getElementById("cpMin").value);
+      const maxUses = Number(document.getElementById("cpMaxUses").value);
+      if(!code || !discount){ showToast("⚠️ املأ الحقول", "error"); return; }
+      try{
+        await sb.from("coupons").insert({ code, discount_percent: discount, min_order: min, max_uses: maxUses });
+        showToast("✅ تم إضافة الكوبون", "success");
+        document.getElementById("cpCode").value = "";
+        await loadAdminData();
+      }catch(e){ showToast("❌ " + e.message, "error"); }
+    }
+    async function deleteCoupon(code){
+      if(!confirm(t("admin_confirm_del"))) return;
+      await sb.from("coupons").delete().eq("code", code);
+      showToast("🗑️ تم الحذف", "success");
+      await loadAdminData();
+    }
+
+    function showProductForm(){
+      editingProductId = null;
+      uploadedImageUrl = null;
+      document.getElementById("pName").value = "";
+      document.getElementById("pDesc").value = "";
+      document.getElementById("pPrice").value = "";
+      document.getElementById("pOldPrice").value = "";
+      document.getElementById("pStock").value = 100;
+      document.getElementById("pFeatured").value = "false";
+      document.getElementById("pImageInput").value = "";
+      document.getElementById("pImagePreview").classList.remove("show");
+      document.getElementById("adminProductForm").style.display = "block";
+    }
+    function hideProductForm(){
+      document.getElementById("adminProductForm").style.display = "none";
+      editingProductId = null; uploadedImageUrl = null;
+    }
+    function editProduct(id){
+      const p = PRODUCTS.find(x => x.id === id); if(!p) return;
+      editingProductId = id;
+      uploadedImageUrl = p.image_url || null;
+      document.getElementById("pName").value = p.name;
+      document.getElementById("pDesc").value = p.description || "";
+      document.getElementById("pPrice").value = p.price;
+      document.getElementById("pOldPrice").value = p.old_price || "";
+      document.getElementById("pStock").value = p.stock || 100;
+      document.getElementById("pFeatured").value = p.featured ? "true" : "false";
+      if(p.category) document.getElementById("pCategory").value = p.category;
+      const preview = document.getElementById("pImagePreview");
+      if(p.image_url){ preview.src = p.image_url; preview.classList.add("show"); }
+      else preview.classList.remove("show");
+      document.getElementById("adminProductForm").style.display = "block";
+    }
+    function previewImage(e){
+      const file = e.target.files[0]; if(!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const preview = document.getElementById("pImagePreview");
+        preview.src = ev.target.result; preview.classList.add("show");
+      };
+      reader.readAsDataURL(file);
+    }
+    async function uploadImage(file){
+      const ext = file.name.split(".").pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
+      const { error } = await sb.storage.from(STORAGE_BUCKET).upload(fileName, file, { cacheControl: "3600", upsert: false });
+      if(error) throw error;
+      const { data: urlData } = sb.storage.from(STORAGE_BUCKET).getPublicUrl(fileName);
+      return urlData.publicUrl;
+    }
+    async function saveProduct(){
+      const name = document.getElementById("pName").value.trim();
+      const desc = document.getElementById("pDesc").value.trim();
+      const price = Number(document.getElementById("pPrice").value);
+      const oldPrice = Number(document.getElementById("pOldPrice").value) || null;
+      const category = document.getElementById("pCategory").value;
+      const stock = Number(document.getElementById("pStock").value) || 0;
+      const featured = document.getElementById("pFeatured").value === "true";
+      const file = document.getElementById("pImageInput").files[0];
+      
+      if(!name || !price){ showToast("⚠️ الاسم والسعر مطلوبان", "error"); return; }
+      
+      const btn = document.getElementById("pSaveBtn");
+      btn.disabled = true;
+      try{
+        let imageUrl = uploadedImageUrl;
+        if(file){ btn.textContent = t("loading_upload"); imageUrl = await uploadImage(file); }
+        
+        const discountPercent = oldPrice && oldPrice > price ? Math.round((1 - price/oldPrice) * 100) : 0;
+        const payload = { 
+          name, description: desc, price, old_price: oldPrice, discount_percent: discountPercent,
+          image_url: imageUrl, category, stock, featured, active: true 
+        };
+        
+        if(editingProductId){
+          const { error } = await sb.from("products").update(payload).eq("id", editingProductId);
+          if(error) throw error;
+          showToast(t("product_updated"), "success");
+        } else {
+          const { error } = await sb.from("products").insert(payload);
+          if(error) throw error;
+          showToast(t("product_added"), "success");
+        }
+        hideProductForm();
+        await loadAdminData();
+      }catch(e){ showToast(t("upload_failed") + " " + e.message, "error"); }
+      finally{ btn.disabled = false; btn.textContent = t("admin_save"); }
+    }
+    async function deleteProduct(id){
+      if(!confirm(t("admin_confirm_del"))) return;
+      try{
+        await sb.from("products").delete().eq("id", id);
+        showToast(t("product_deleted"), "success");
+        await loadAdminData();
+      }catch(e){ showToast("❌ " + e.message, "error"); }
+    }
+    async function toggleFeatured(id){
+      const p = PRODUCTS.find(x => x.id === id);
+      await sb.from("products").update({ featured: !p.featured }).eq("id", id);
+      showToast(p.featured ? "تم إلغاء التمييز" : "⭐ تم التمييز", "success");
+      await loadAdminData();
+    }
+    async function updateOrderStatus(id, status){
+      try{
+        await sb.from("orders").update({ status }).eq("id", id);
+        showToast("✅ " + status, "success");
+        renderStats();
+      }catch(e){ showToast("❌ " + e.message, "error"); }
+    }
+
+    /* ================= فتح/إغلاق ================= */
+    function closeAll(){
+      document.getElementById("overlay").classList.remove("open");
+      document.querySelectorAll(".panel").forEach(p => p.classList.remove("open"));
+    }
+
+    /* ================= Toast ================= */
+    let toastTimer;
+    function showToast(msg, type){
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.className = "toast show" + (type ? " " + type : "");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove("show"), 3200);
+    }
+
+    /* ================= تشغيل ================= */
+    applyLang();
+    fillWilayas();
+    loadLogo();
+    loadProducts();
+    updateWishlistBadge();
+</script>
+</body>
+</html>
